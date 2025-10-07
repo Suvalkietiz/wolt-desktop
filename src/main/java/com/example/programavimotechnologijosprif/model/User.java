@@ -3,10 +3,11 @@ package com.example.programavimotechnologijosprif.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 @Getter
 @Setter
-public class User {
+public class User implements Serializable {
     protected int id;
     protected String login;
     protected String password;
