@@ -26,4 +26,13 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
         this.isAdmin = false;
     }
+    public User(String login, String password){
+        this.login = login;
+        this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return login + " " + password + " " + name + " " + surname + " " + phoneNumber;
+    }
 }

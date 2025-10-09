@@ -24,8 +24,11 @@ public class AppUser extends User implements Serializable {
         this.feedback = new ArrayList<>();
     }
 
+    public AppUser(String login, String password){
+        super(login, password);
+    }
     @Override
     public String toString() {
-        return name+" "+surname;
+        return login + " " + password + " " + name + " " + surname + " " + phoneNumber + " " + address;
     }
 }

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.MainForm">
+    <children>
+        <TabPane layoutX="37.0" layoutY="28.0" prefHeight="354.0" prefWidth="547.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="Restaurant orders">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <ListView layoutX="26.0" layoutY="14.0" prefHeight="300.0" prefWidth="200.0" />
+                                <ComboBox layoutX="238.0" layoutY="25.0" prefWidth="150.0" promptText="restoranoPavadinimasADMINUI" />
+                                <ComboBox layoutX="238.0" layoutY="67.0" prefWidth="150.0" promptText="driveriuPavadinimaiADMINUI?" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="User mngmt">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TableView layoutX="31.0" layoutY="14.0" prefHeight="263.0" prefWidth="517.0">
+                                    <columns>
+                                        <TableColumn prefWidth="75.0" text="ID" />
+                                        <TableColumn prefWidth="75.0" text="Login" />
+                                        <TableColumn prefWidth="75.0" text="Password" />
+                                        <TableColumn prefWidth="75.0" text="Name" />
+                                        <TableColumn prefWidth="75.0" text="Surname" />
+                                        <TableColumn prefWidth="75.0" text="Action" />
+                                        <TableColumn prefWidth="75.0" text="OtherHistory" />
+                                    </columns>
+                                </TableView>
+                                <Button layoutX="190.0" layoutY="286.0" mnemonicParsing="false" text="Create new user" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Menu">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <ListView layoutX="25.0" layoutY="41.0" prefHeight="281.0" prefWidth="176.0" />
+                                <Label layoutX="11.0" layoutY="14.0" text="My mewniu" />
+                                <ComboBox layoutX="231.0" layoutY="51.0" prefWidth="150.0" promptText="filtrasAdmina" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
+</AnchorPane>

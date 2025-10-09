@@ -16,4 +16,9 @@ public class Restaurant extends AppUser {
         this.workHours = workHours;
         this.dishes = dishes;
     }
+
+    @Override
+    public String toString() {
+        return login + " " + password + " " + name + " " + surname + " " + phoneNumber + " " + address + " " + workHours + "\t" + dishes;
+    }
 }

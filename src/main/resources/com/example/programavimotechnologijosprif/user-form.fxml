@@ -1,17 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.UserForm">
    <children>
       <Button layoutX="228.0" layoutY="330.0" mnemonicParsing="false" onAction="#createUser" text="Save" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="318.5" AnchorPane.topAnchor="330.0" />
-      <TextField fx:id="loginField" layoutX="55.0" layoutY="42.0" promptText="Login" AnchorPane.bottomAnchor="332.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="385.5" AnchorPane.topAnchor="42.0" />
-      <PasswordField fx:id="passwordField" layoutX="55.0" layoutY="91.0" promptText="Password" />
-      <TextField fx:id="nameField" layoutX="55.0" layoutY="140.0" promptText="Name" />
-      <TextField fx:id="surnameField" layoutX="55.0" layoutY="188.0" promptText="Surname" />
-      <TextField fx:id="phoneNumberField" layoutX="55.0" layoutY="243.0" promptText="Phone number" />
+      <TextField fx:id="loginField" layoutX="55.0" layoutY="73.0" promptText="Login" AnchorPane.bottomAnchor="301.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="385.5" AnchorPane.topAnchor="73.0" />
+      <PasswordField fx:id="passwordField" layoutX="55.0" layoutY="122.0" promptText="Password" />
+      <TextField fx:id="nameField" layoutX="55.0" layoutY="171.0" promptText="Name" />
+      <TextField fx:id="surnameField" layoutX="55.0" layoutY="219.0" promptText="Surname" />
+      <TextField fx:id="phoneNumberField" layoutX="55.0" layoutY="274.0" promptText="Phone number" />
+      <RadioButton fx:id="userRadio" layoutX="43.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" selected="true" text="User">
+         <toggleGroup>
+            <ToggleGroup fx:id="userType" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="restaurantRadio" layoutX="155.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Restaurant" toggleGroup="$userType" />
+      <RadioButton fx:id="driverRadio" layoutX="282.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Driver" toggleGroup="$userType" />
+      <RadioButton fx:id="clientRadio" layoutX="422.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Client" toggleGroup="$userType" />
+      <TextField fx:id="addressField" disable="true" layoutX="310.0" layoutY="158.0" promptText="Address" />
+      <TextField fx:id="workHoursField" disable="true" layoutX="310.0" layoutY="200.0" promptText="Work hours" />
+      <ListView fx:id="dishesField" disable="true" layoutX="310.0" layoutY="249.0" prefHeight="76.0" prefWidth="200.0" />
+      <Label layoutX="310.0" layoutY="232.0" text="Available dishes" />
+      <TextField fx:id="driverLicenseField" disable="true" layoutX="310.0" layoutY="62.0" promptText="Driving license ID" />
+      <DatePicker fx:id="birthDateFIeld" disable="true" layoutX="310.0" layoutY="111.0" />
+      <Label layoutX="310.0" layoutY="93.0" text="Birth Day" />
    </children>
 </AnchorPane>

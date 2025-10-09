@@ -18,4 +18,8 @@ public class Driver extends AppUser {
         this.driverLicense = driverLicense;
         this.birthDate = birthDate;
     }
+    @Override
+    public String toString() {
+        return login + " " + password + " " + name + " " + surname + " " + phoneNumber + " " + address + " " + driverLicense + " " + birthDate;
+    }
 }

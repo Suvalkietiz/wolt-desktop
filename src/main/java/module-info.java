@@ -9,6 +9,7 @@ module com.example.programavimotechnologijosprif {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires static lombok;
+    //requires javafx.graphics;
 
     opens com.example.programavimotechnologijosprif to javafx.fxml;
     exports com.example.programavimotechnologijosprif;
