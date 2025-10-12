@@ -10,10 +10,18 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class FxUtils {
-    public static void generateAlert(Alert.AlertType alertType, String title, String header, String content){
+    public static void generateHeaderAlert(Alert.AlertType alertType, String title, String header, String content){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    public static void generateAlert(Alert.AlertType alertType, String title, String content){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
     }

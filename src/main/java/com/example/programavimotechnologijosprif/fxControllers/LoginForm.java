@@ -40,7 +40,7 @@ public class LoginForm {
             stage.show();
         } else {
             //cia noriu naudoti alertus
-            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "User login", "No such user");
+            FxUtils.generateHeaderAlert(Alert.AlertType.INFORMATION, "Oh no", "User login", "No such user");
         }
     }
 

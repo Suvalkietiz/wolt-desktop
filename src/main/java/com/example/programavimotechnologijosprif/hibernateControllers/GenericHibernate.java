@@ -24,7 +24,7 @@ public class GenericHibernate {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public <T> void createEntity(T entity) {
+    public <T> void createEntity(T entity, String header, String alertMessage) {
         try{
             entityManager = entityManagerFactory.createEntityManager();
             entityManager.getTransaction().begin();
@@ -32,7 +32,8 @@ public class GenericHibernate {
             entityManager.getTransaction().commit();
         } catch (Exception ex){
             // noresiu ismest alert zmogui kad zinotu db operacijos metu buvo klaida
-            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "DB error", "Something went wrong with createEntity");
+            //FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "DB error", "Something went wrong with createEntity");
+            FxUtils.generateHeaderAlert(Alert.AlertType.ERROR, "DataBase Error", header, alertMessage);
         } finally {
             if(entityManager != null){
                 entityManager.close();

@@ -1,0 +1,9 @@
+- UserForm.java praplesti emptyFields functionaluma.
+kolkas tikrinami tik 5 pagridiniai laukai: login, password, username, surname, phone number
+
+- Message.java klase turetu zinoti adresatus ir adresus
+
+- Review.java klase naudoja tik Restoranai. praplesti funkcionaluma
+
+- Chat.java egzistuoja tik vienas. Praplesti funkcionaluma, kad egzistuoja du atskiri.
+Vienas yra vairuotojas <-> klientas, o kitas restoranas <-> klientas
