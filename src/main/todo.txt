@@ -1,3 +1,7 @@
+- Neleisk jokiu tusciu langu Registracijoje
+- UserForm.java Sukurti Restorano Patiekalu sarasa,
+atnaujinti Restorano konstruktoriu (daabar kuriamas su tusciu arrayListu apie patiekalus)
+
 - UserForm.java praplesti emptyFields functionaluma.
 kolkas tikrinami tik 5 pagridiniai laukai: login, password, username, surname, phone number
 
@@ -7,3 +11,4 @@ kolkas tikrinami tik 5 pagridiniai laukai: login, password, username, surname, p
 
 - Chat.java egzistuoja tik vienas. Praplesti funkcionaluma, kad egzistuoja du atskiri.
 Vienas yra vairuotojas <-> klientas, o kitas restoranas <-> klientas
+

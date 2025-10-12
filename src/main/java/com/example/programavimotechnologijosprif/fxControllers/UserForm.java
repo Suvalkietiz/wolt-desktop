@@ -9,36 +9,46 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserForm {
+    @FXML public RadioButton userRadio;
+    @FXML public RadioButton restaurantRadio;
+    @FXML public RadioButton driverRadio;
+    @FXML public RadioButton clientRadio;
+
+    @FXML public AnchorPane clientBox;
+    @FXML public VBox restaurantBox;
+    @FXML public VBox driverBox;
+
     @FXML public TextField loginField;
     @FXML public PasswordField passwordField;
     @FXML public TextField nameField;
     @FXML public TextField surnameField;
     @FXML public TextField phoneNumberField;
-    @FXML public RadioButton userRadio;
-    @FXML public RadioButton restaurantRadio;
-    @FXML public RadioButton driverRadio;
-    @FXML public RadioButton clientRadio;
-    @FXML public AnchorPane restaurantPane;
-    @FXML public AnchorPane driverPane;
-    @FXML public AnchorPane clientPane;
+    @FXML public TextField addressField;
+    @FXML public TextField workHoursField;
+    @FXML public DatePicker birthDateField;
+    @FXML public TextField drivingLicenseID;
+
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
+
 
     public void setData(EntityManagerFactory entityManagerFactory) {
         this.entityManagerFactory = entityManagerFactory;
         this.genericHibernate = new GenericHibernate(entityManagerFactory);
     }
 
-
-    public void createUser(ActionEvent actionEvent) {
+    @FXML public void createUser(ActionEvent actionEvent) {
         final String alertTitle = "Netinkamas login";
         final String alertMessage = "Toks login jau egzistuoja, prasome ivesti kitoki login";
         if(userRadio.isSelected()){
-            Admin admin = new Admin(loginField.getText(),
+            Admin admin = new Admin(
+                    loginField.getText(),
                     passwordField.getText(),
                     nameField.getText(),
                     surnameField.getText(),
@@ -46,34 +56,59 @@ public class UserForm {
             if(countEmptyFields() != 0) generateEmptyInputAlert();
             else genericHibernate.createEntity(admin, alertTitle, alertMessage);
         } else if(restaurantRadio.isSelected()){
-            Restaurant restaurant = new Restaurant(); // update me
-            genericHibernate.createEntity(restaurant, alertTitle, alertMessage);
+            Restaurant restaurant = new Restaurant(
+                    loginField.getText(),
+                    passwordField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumberField.getText(),
+                    addressField.getText(),
+                    workHoursField.getText(),
+                    new ArrayList<>()); // CHANGE ME
+            if(countEmptyFields() != 0) generateEmptyInputAlert();
+            else genericHibernate.createEntity(restaurant, alertTitle, alertMessage);
         } else if(driverRadio.isSelected()){
-            Driver driver = new Driver(); // update me
-            genericHibernate.createEntity(driver, alertTitle, alertMessage);
+            Driver driver = new Driver(
+                    loginField.getText(),
+                    passwordField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumberField.getText(),
+                    addressField.getText(),
+                    drivingLicenseID.getText(),
+                    birthDateField.getValue());
+            if(countEmptyFields() != 0) generateEmptyInputAlert();
+            else genericHibernate.createEntity(driver, alertTitle, alertMessage);
         } else if(clientRadio.isSelected()){
-            AppUser appUser = new AppUser(); // update me
-            genericHibernate.createEntity(appUser, alertTitle, alertMessage);
+            AppUser appUser = new AppUser(
+                    loginField.getText(),
+                    passwordField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumberField.getText(),
+                    addressField.getText());
+            if(countEmptyFields() != 0) generateEmptyInputAlert();
+            else genericHibernate.createEntity(appUser, alertTitle, alertMessage);
         }
     }
 
-    public void disableFields(ActionEvent actionEvent) {
+    @FXML public void disableFields(ActionEvent actionEvent) {
         if(userRadio.isSelected()) {
-            restaurantPane.setVisible(false);
-            driverPane.setVisible(false);
-            clientPane.setVisible(false);
+            clientBox.setVisible(false);
+            driverBox.setVisible(false);
+            restaurantBox.setVisible(false);
         } else if(restaurantRadio.isSelected()) {
-            restaurantPane.setVisible(true);
-            driverPane.setVisible(false);
-            clientPane.setVisible(false);
+            clientBox.setVisible(true);
+            driverBox.setVisible(false);
+            restaurantBox.setVisible(true);
         } else if(driverRadio.isSelected()) {
-            restaurantPane.setVisible(false);
-            driverPane.setVisible(true);
-            clientPane.setVisible(false);
+            clientBox.setVisible(true);
+            driverBox.setVisible(true);
+            restaurantBox.setVisible(false);
         } else if(clientRadio.isSelected()) {
-            restaurantPane.setVisible(false);
-            driverPane.setVisible(false);
-            clientPane.setVisible(true);
+            clientBox.setVisible(true);
+            driverBox.setVisible(false);
+            restaurantBox.setVisible(false);
         }
         
     }
@@ -81,58 +116,32 @@ public class UserForm {
     //================================================================
     //====================FUNCTIONAL METHODS==========================
     //================================================================
-    private boolean isLoginEmpty(){
-        if(loginField.getText().isEmpty()){
-            //FxUtils.generateAlert(Alert.AlertType.ERROR, "Error Window", "Prasome ivesti reikiamus laukus");
-            return true;
-        }
-        return false;
+    private boolean isFieldEmpty(TextField textField) {
+        if(textField.getText().isEmpty()) return true;
+        else return false;
     }
-    private boolean isPasswordEmpty(){
-        if(passwordField.getText().isEmpty()){
-            return true;
-        }
-        return false;
-    }
-    private boolean isNameEmpty(){
-        if(nameField.getText().isEmpty()){
-            return true;
-        }
-        return false;
-    }
-    private boolean isSurnameEmpty(){
-        if(surnameField.getText().isEmpty()){
-            return true;
-        }
-        return false;
-    }
-    private boolean isPhoneNumberEmpty(){
-        if(phoneNumberField.getText().isEmpty()){
-            return true;
-        }
-        return false;
-    }
+
     private String getEmptyFieldsMessage(){
         String emptyFieldsMessage = "";
         int emptyFields = countEmptyFields();
         if(emptyFields == 0)return emptyFieldsMessage;
-        if(isLoginEmpty()){
+        if(isFieldEmpty(loginField)){
             emptyFields--;
             emptyFieldsMessage += (emptyFields == 0 ? " login" : " login,");
         }
-        if(isPasswordEmpty()){
+        if(isFieldEmpty(passwordField)){
             emptyFields--;
             emptyFieldsMessage += (emptyFields == 0 ? " password" : " password,");
         }
-        if(isNameEmpty()){
+        if(isFieldEmpty(nameField)){
             emptyFields--;
             emptyFieldsMessage += (emptyFields == 0 ? " name" : " name,");
         }
-        if(isSurnameEmpty()) {
+        if(isFieldEmpty(surnameField)) {
             emptyFields--;
             emptyFieldsMessage += (emptyFields == 0 ? " surname" : " surname,");
         }
-        if(isPhoneNumberEmpty()) {
+        if(isFieldEmpty(phoneNumberField)) {
             emptyFields--;
             emptyFieldsMessage += (emptyFields == 0 ? " phone number" : " phone number,");
         }
@@ -140,11 +149,11 @@ public class UserForm {
     }
     private int countEmptyFields(){
         int emptyFields = 0;
-        if(isLoginEmpty())emptyFields++;
-        if(isPasswordEmpty())emptyFields++;
-        if(isNameEmpty())emptyFields++;
-        if(isSurnameEmpty())emptyFields++;
-        if(isPhoneNumberEmpty())emptyFields++;
+        if(isFieldEmpty(loginField))emptyFields++;
+        if(isFieldEmpty(passwordField))emptyFields++;
+        if(isFieldEmpty(nameField))emptyFields++;
+        if(isFieldEmpty(surnameField))emptyFields++;
+        if(isFieldEmpty(phoneNumberField))emptyFields++;
         return emptyFields;
     }
     private void generateEmptyInputAlert(){

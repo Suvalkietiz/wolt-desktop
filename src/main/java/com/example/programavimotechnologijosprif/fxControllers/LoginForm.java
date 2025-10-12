@@ -32,7 +32,7 @@ public class LoginForm {
         User user = customHibernate.getUserByCrediantials(loginField.getText(), passwordField.getText());
         if (user != null) {
             //sekmes atvejis
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-form.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-form2.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
             Stage stage = (Stage) loginField.getScene().getWindow();
             stage.setTitle("Main Form");

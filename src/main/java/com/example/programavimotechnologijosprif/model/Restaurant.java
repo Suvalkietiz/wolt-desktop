@@ -27,6 +27,7 @@ public class Restaurant extends User {
     public Restaurant(String login, String password, String name, String surname, String phoneNumber,
                       String address,String workHours, List<Food> dishes) {
         super(login, password, name, surname, phoneNumber);
+        this.address = address;
         this.workHours = workHours;
         this.dishes = dishes;
     }

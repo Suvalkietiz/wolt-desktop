@@ -9,12 +9,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.UserForm">
    <children>
-      <Button layoutX="228.0" layoutY="330.0" mnemonicParsing="false" onAction="#createUser" text="Save" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="318.5" AnchorPane.topAnchor="330.0" />
-      <TextField fx:id="loginField" layoutX="55.0" layoutY="73.0" promptText="Login" AnchorPane.bottomAnchor="301.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="385.5" AnchorPane.topAnchor="73.0" />
+      <Button layoutX="228.0" layoutY="439.0" mnemonicParsing="false" onAction="#createUser" prefHeight="28.0" prefWidth="54.0" text="Save" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="228.0" AnchorPane.rightAnchor="318.0" AnchorPane.topAnchor="439.0" />
+      <TextField fx:id="loginField" layoutX="55.0" layoutY="73.0" prefHeight="26.0" prefWidth="160.0" promptText="Login" AnchorPane.bottomAnchor="410.0" AnchorPane.leftAnchor="55.0" AnchorPane.rightAnchor="385.0" AnchorPane.topAnchor="73.0" />
       <PasswordField fx:id="passwordField" layoutX="55.0" layoutY="122.0" promptText="Password" />
       <TextField fx:id="nameField" layoutX="55.0" layoutY="171.0" promptText="Name" />
       <TextField fx:id="surnameField" layoutX="55.0" layoutY="219.0" promptText="Surname" />
@@ -26,30 +27,33 @@
       <RadioButton fx:id="restaurantRadio" layoutX="155.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Restaurant" toggleGroup="$userType" />
       <RadioButton fx:id="driverRadio" layoutX="282.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Driver" toggleGroup="$userType" />
       <RadioButton fx:id="clientRadio" layoutX="422.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Client" toggleGroup="$userType" />
-      <StackPane layoutX="310.0" layoutY="60.0" prefHeight="264.0" prefWidth="200.0">
+      <AnchorPane fx:id="clientBox" layoutX="338.0" layoutY="71.0" prefHeight="365.0" prefWidth="226.0" visible="false">
          <children>
-            <AnchorPane fx:id="restaurantPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            <TextField fx:id="addressField" prefHeight="26.0" prefWidth="226.0" promptText="Address" />
+            <VBox fx:id="restaurantBox" layoutY="26.0" prefHeight="364.0" prefWidth="226.0">
                <children>
-                  <TextField promptText="Address" />
-                  <TextField layoutY="50.0" prefHeight="26.0" prefWidth="160.0" promptText="Work hours" />
-                  <ListView layoutY="103.0" prefHeight="162.0" prefWidth="200.0" />
-                  <Label layoutY="79.0" prefHeight="26.0" prefWidth="88.0" text="Available dishes" />
+                  <TextField fx:id="workHoursField" prefHeight="26.0" prefWidth="160.0" promptText="Work hours" />
+                  <Label prefHeight="26.0" prefWidth="88.0" text="Cuisine" />
+                  <ListView prefHeight="162.0" prefWidth="226.0" />
+                  <TextField promptText="Dish name" />
+                  <TextField promptText="Ingredients" />
+                  <TextField promptText="Allergens" />
+                  <HBox prefHeight="32.0" prefWidth="226.0">
+                     <children>
+                        <Button mnemonicParsing="false" text="Add dish" />
+                        <Button mnemonicParsing="false" text="Delete dish" />
+                     </children>
+                  </HBox>
                </children>
-            </AnchorPane>
-            <AnchorPane fx:id="driverPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+            </VBox>
+            <VBox fx:id="driverBox" layoutY="26.0" prefHeight="364.0" prefWidth="226.0">
                <children>
-                  <TextField promptText="Address" />
-                  <DatePicker layoutY="51.0" prefHeight="26.0" prefWidth="186.0" />
-                  <TextField layoutY="102.0" prefHeight="26.0" prefWidth="160.0" promptText="Driving license ID" />
-                  <Label layoutY="31.0" prefHeight="18.0" prefWidth="50.0" text="Birth Day" />
+                  <Label prefHeight="18.0" prefWidth="50.0" text="Birth Day" />
+                  <DatePicker fx:id="birthDateField" prefHeight="26.0" prefWidth="186.0" />
+                  <TextField fx:id="drivingLicenseID" prefHeight="26.0" prefWidth="160.0" promptText="Driving license ID" />
                </children>
-            </AnchorPane>
-            <AnchorPane fx:id="clientPane" prefHeight="200.0" prefWidth="200.0" visible="false">
-               <children>
-                  <TextField layoutY="2.0" promptText="Address" />
-               </children>
-            </AnchorPane>
+            </VBox>
          </children>
-      </StackPane>
+      </AnchorPane>
    </children>
 </AnchorPane>
