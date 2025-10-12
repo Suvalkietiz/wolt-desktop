@@ -1,14 +1,23 @@
 package com.example.programavimotechnologijosprif.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class User implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected int id;
+    @Column(unique = true)
     protected String login;
     protected String password;
     protected String name;
@@ -16,7 +25,6 @@ public class User implements Serializable {
     protected String phoneNumber;
     protected LocalDate dateCreated;
     protected LocalDate dateUpdated;
-    protected boolean isAdmin;
 
     public User(String login, String password, String name, String surname, String phoneNumber) {
         this.login = login;
@@ -24,15 +32,10 @@ public class User implements Serializable {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
-        this.isAdmin = false;
     }
     public User(String login, String password){
         this.login = login;
         this.password = password;
     }
 
-    @Override
-    public String toString() {
-        return login + " " + password + " " + name + " " + surname + " " + phoneNumber;
-    }
 }

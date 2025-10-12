@@ -1,25 +1,33 @@
 package com.example.programavimotechnologijosprif.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 @Getter
 @Setter
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class FoodOrder {
-   private int id;
-   private List<Food> items;
-   private double price;
-   private List<Chat> chat;
-   private LocalDateTime timeCreated;
-   private LocalDateTime timeCompleted;
-   private Status status;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private int id;
+    @ManyToOne private AppUser appUser;
+    @ManyToOne private Driver driver;
+    @ManyToOne private Restaurant restaurant;
+    @ManyToMany private List<Food> items;
+    private double price;
+    @OneToOne private Chat chat; // kai bus keli atskiri chatai, tuomet turesi mapinti. kolkas nereikia.
+    private LocalDateTime timeCreated;
+    private LocalDateTime timeCompleted;
+    @Enumerated private Status status;
 
     public FoodOrder(List<Food> items) {
         this.items = items;
-        this.price = 10.10; // TEMPORARY
+        this.price = 10.10; // calculate from <Food> items...
         timeCreated = LocalDateTime.now();
         status = Status.PENDING;
     }

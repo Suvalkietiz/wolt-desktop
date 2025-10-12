@@ -1,27 +1,31 @@
 package com.example.programavimotechnologijosprif.model;
 // !BasicUser!
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 public class AppUser extends User implements Serializable {
     protected String address;
-    protected List<FoodOrder> myOrders;
-    protected List<Review> myReviews;
-    protected List<Review>feedback;
-    protected double rating;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY) protected List<Chat> chats;
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY) protected List<FoodOrder> myOrders;
+    //protected List<Review> myReviews;
+    //protected List<Review> feedback;
+    @Transient protected double rating;
 
     public AppUser(String login, String password, String name, String surname, String phoneNumber, String address) {
         super(login, password, name, surname, phoneNumber);
         this.address = address;
         this.myOrders = new ArrayList<>();
-        this.myReviews = new ArrayList<>();
-        this.feedback = new ArrayList<>();
+        //this.myReviews = new ArrayList<>();
+        //this.feedback = new ArrayList<>();
     }
 
     public AppUser(String login, String password){
@@ -30,5 +34,9 @@ public class AppUser extends User implements Serializable {
     @Override
     public String toString() {
         return login + " " + password + " " + name + " " + surname + " " + phoneNumber + " " + address;
+    }
+
+    public void addOrder(FoodOrder foodOrder){
+        this.myOrders.add(foodOrder);
     }
 }

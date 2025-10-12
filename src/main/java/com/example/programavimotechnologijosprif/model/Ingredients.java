@@ -2,6 +2,9 @@ package com.example.programavimotechnologijosprif.model;
 
 public enum Ingredients {
     CHICKEN,
+    CACTUS,
+    SHRIMP,
+    BRICK,
     BEEF,
     EGGS,
     FISH,

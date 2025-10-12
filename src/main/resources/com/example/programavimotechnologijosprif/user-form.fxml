@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.UserForm">
    <children>
@@ -25,12 +26,30 @@
       <RadioButton fx:id="restaurantRadio" layoutX="155.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Restaurant" toggleGroup="$userType" />
       <RadioButton fx:id="driverRadio" layoutX="282.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Driver" toggleGroup="$userType" />
       <RadioButton fx:id="clientRadio" layoutX="422.0" layoutY="30.0" mnemonicParsing="false" onAction="#disableFields" text="Client" toggleGroup="$userType" />
-      <TextField fx:id="addressField" disable="true" layoutX="310.0" layoutY="158.0" promptText="Address" />
-      <TextField fx:id="workHoursField" disable="true" layoutX="310.0" layoutY="200.0" promptText="Work hours" />
-      <ListView fx:id="dishesField" disable="true" layoutX="310.0" layoutY="249.0" prefHeight="76.0" prefWidth="200.0" />
-      <Label layoutX="310.0" layoutY="232.0" text="Available dishes" />
-      <TextField fx:id="driverLicenseField" disable="true" layoutX="310.0" layoutY="62.0" promptText="Driving license ID" />
-      <DatePicker fx:id="birthDateFIeld" disable="true" layoutX="310.0" layoutY="111.0" />
-      <Label layoutX="310.0" layoutY="93.0" text="Birth Day" />
+      <StackPane layoutX="310.0" layoutY="60.0" prefHeight="264.0" prefWidth="200.0">
+         <children>
+            <AnchorPane fx:id="restaurantPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <TextField promptText="Address" />
+                  <TextField layoutY="50.0" prefHeight="26.0" prefWidth="160.0" promptText="Work hours" />
+                  <ListView layoutY="103.0" prefHeight="162.0" prefWidth="200.0" />
+                  <Label layoutY="79.0" prefHeight="26.0" prefWidth="88.0" text="Available dishes" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="driverPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <TextField promptText="Address" />
+                  <DatePicker layoutY="51.0" prefHeight="26.0" prefWidth="186.0" />
+                  <TextField layoutY="102.0" prefHeight="26.0" prefWidth="160.0" promptText="Driving license ID" />
+                  <Label layoutY="31.0" prefHeight="18.0" prefWidth="50.0" text="Birth Day" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="clientPane" prefHeight="200.0" prefWidth="200.0" visible="false">
+               <children>
+                  <TextField layoutY="2.0" promptText="Address" />
+               </children>
+            </AnchorPane>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

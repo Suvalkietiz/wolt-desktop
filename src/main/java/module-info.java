@@ -3,7 +3,9 @@ module com.example.programavimotechnologijosprif {
     requires javafx.fxml;
     requires mysql.connector.j;
     requires java.sql;
-
+    requires java.naming;
+    requires org.hibernate.orm.core;
+    requires jakarta.persistence;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
@@ -15,4 +17,6 @@ module com.example.programavimotechnologijosprif {
     exports com.example.programavimotechnologijosprif;
     exports com.example.programavimotechnologijosprif.fxControllers to javafx.fxml;
     opens com.example.programavimotechnologijosprif.fxControllers to javafx.fxml;
+    opens com.example.programavimotechnologijosprif.model to org.hibernate.orm.core;
+    exports com.example.programavimotechnologijosprif.model;
 }

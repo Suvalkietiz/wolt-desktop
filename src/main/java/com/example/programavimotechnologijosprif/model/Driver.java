@@ -1,20 +1,33 @@
 package com.example.programavimotechnologijosprif.model;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 @Setter
 @Getter
-public class Driver extends AppUser {
-    protected String driverLicense;
-    protected LocalDate birthDate;
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Driver extends User {
+    private String address;
+    private String driverLicense;
+    private LocalDate birthDate;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY) private List<Chat> chats;
+    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY) private List<FoodOrder> myOrders;
 
     public Driver(String login, String password, String name, String surname, String phoneNumber,
                   String address, String driverLicense, LocalDate birthDate) {
-        super(login, password, name, surname, phoneNumber, address);
+        super(login, password, name, surname, phoneNumber);
         this.driverLicense = driverLicense;
         this.birthDate = birthDate;
     }

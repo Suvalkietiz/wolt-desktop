@@ -9,6 +9,7 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.MainForm">
     <children>
@@ -19,8 +20,21 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
                                 <ListView layoutX="26.0" layoutY="14.0" prefHeight="300.0" prefWidth="200.0" />
-                                <ComboBox layoutX="238.0" layoutY="25.0" prefWidth="150.0" promptText="restoranoPavadinimasADMINUI" />
-                                <ComboBox layoutX="238.0" layoutY="67.0" prefWidth="150.0" promptText="driveriuPavadinimaiADMINUI?" />
+                        <StackPane layoutX="244.0" layoutY="20.0" prefHeight="150.0" prefWidth="200.0">
+                           <children>
+                              <AnchorPane prefHeight="99.0" prefWidth="200.0">
+                                 <children>
+                                    <ComboBox layoutX="7.0" layoutY="8.0" prefWidth="150.0" promptText="restoranuLokacijos" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="104.0" prefWidth="200.0">
+                                 <children>
+                                            <ComboBox prefWidth="150.0" promptText="restoranoPavadinimasADMINUI" />
+                                            <ComboBox layoutY="52.0" prefWidth="150.0" promptText="driveriuPavadinimaiADMINUI?" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </StackPane>
                             </children>
                         </AnchorPane>
                     </content>
@@ -41,6 +55,7 @@
                                     </columns>
                                 </TableView>
                                 <Button layoutX="190.0" layoutY="286.0" mnemonicParsing="false" text="Create new user" />
+                        <Label layoutX="108.0" layoutY="278.0" text="RESTAURANT HAS TOTALY DIFFERENT INTERFACE" />
                             </children>
                         </AnchorPane>
                     </content>
@@ -50,8 +65,8 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
                                 <ListView layoutX="25.0" layoutY="41.0" prefHeight="281.0" prefWidth="176.0" />
-                                <Label layoutX="11.0" layoutY="14.0" text="My mewniu" />
-                                <ComboBox layoutX="231.0" layoutY="51.0" prefWidth="150.0" promptText="filtrasAdmina" />
+                                <Label layoutX="25.0" layoutY="14.0" text="Restaurant menu" />
+                                <ComboBox layoutX="231.0" layoutY="51.0" prefWidth="150.0" promptText="filtrasAdminams" />
                             </children>
                         </AnchorPane>
                     </content>
