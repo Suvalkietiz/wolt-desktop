@@ -12,3 +12,9 @@ kolkas tikrinami tik 5 pagridiniai laukai: login, password, username, surname, p
 - Chat.java egzistuoja tik vienas. Praplesti funkcionaluma, kad egzistuoja du atskiri.
 Vienas yra vairuotojas <-> klientas, o kitas restoranas <-> klientas
 
+
+
+
+
+
+// Potential bug. What if I log in using driver/client crediantials ?

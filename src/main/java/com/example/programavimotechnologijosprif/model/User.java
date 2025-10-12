@@ -25,6 +25,7 @@ public class User implements Serializable {
     protected String phoneNumber;
     protected LocalDate dateCreated;
     protected LocalDate dateUpdated;
+    protected boolean isAdmin;
 
     public User(String login, String password, String name, String surname, String phoneNumber) {
         this.login = login;
@@ -32,6 +33,7 @@ public class User implements Serializable {
         this.name = name;
         this.surname = surname;
         this.phoneNumber = phoneNumber;
+        this.isAdmin = false;
     }
     public User(String login, String password){
         this.login = login;

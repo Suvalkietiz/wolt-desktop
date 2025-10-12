@@ -5,8 +5,6 @@
 package com.example.programavimotechnologijosprif.hibernateControllers;
 
 import com.example.programavimotechnologijosprif.Utils.FxUtils;
-import com.example.programavimotechnologijosprif.model.Admin;
-import com.example.programavimotechnologijosprif.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;

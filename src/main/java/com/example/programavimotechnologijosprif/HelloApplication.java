@@ -1,9 +1,5 @@
 package com.example.programavimotechnologijosprif;
 
-import com.example.programavimotechnologijosprif.model.Admin;
-import com.example.programavimotechnologijosprif.model.AppUser;
-import com.example.programavimotechnologijosprif.model.Driver;
-import com.example.programavimotechnologijosprif.model.Restaurant;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

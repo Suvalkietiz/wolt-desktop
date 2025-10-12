@@ -47,7 +47,7 @@ public class UserForm {
         final String alertTitle = "Netinkamas login";
         final String alertMessage = "Toks login jau egzistuoja, prasome ivesti kitoki login";
         if(userRadio.isSelected()){
-            Admin admin = new Admin(
+            User admin = new User(
                     loginField.getText(),
                     passwordField.getText(),
                     nameField.getText(),
