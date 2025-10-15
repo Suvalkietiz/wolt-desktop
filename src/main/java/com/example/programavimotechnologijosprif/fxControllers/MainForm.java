@@ -5,10 +5,12 @@ import com.example.programavimotechnologijosprif.hibernateControllers.GenericHib
 import com.example.programavimotechnologijosprif.model.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 
 import java.util.List;
 
@@ -16,6 +18,8 @@ public class MainForm {
     @FXML public TabPane adminPane;
     @FXML public TabPane restaurantPane;
     @FXML public TableColumn idColumn;
+    @FXML public ListView<User> allUsersList;
+    public TextField loginField;
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
@@ -24,7 +28,7 @@ public class MainForm {
 
     private void loadAllUsers(){
         List<User> users = genericHibernate.getAllRecords(User.class);
-        for(User user : users)System.out.println(user.getName()); // pratesk mane...
+        allUsersList.getItems().addAll(users);
     }
 
 
@@ -52,10 +56,16 @@ public class MainForm {
     }
 
 
+    public void loadUserData(MouseEvent mouseEvent) {
+        User user1 = allUsersList.getSelectionModel().getSelectedItem();
+        loginField.setText(user1.getLogin());
 
+    }
 
+    public void deleteUser(ActionEvent actionEvent) {
+        User user1 = allUsersList.getSelectionModel().getSelectedItem();
+        //genericHibernate.deleteEntity(user1); neveikia
+        genericHibernate.deleteEntityById(User.class, user1.getId());
 
-
-
-
+    }
 }

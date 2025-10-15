@@ -70,6 +70,24 @@ public class GenericHibernate {
             }
         }
     }
+
+    public <T> void deleteEntityById(Class<T> entityClass, int id) {
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            T entity = entityManager.find(entityClass, id);
+            entityManager.remove(entity);
+            entityManager.getTransaction().commit();
+        } catch (Exception ex){
+            // noresiu ismest alert zmogui kad zinotu db operacijos metu buvo klaida
+
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+    }
+
     public <T> List<T> getAllRecords(Class<T> entityClass) {
         List<T> list = new ArrayList<>();
         try{

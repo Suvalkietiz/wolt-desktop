@@ -34,6 +34,6 @@ public class Restaurant extends User {
 
     @Override
     public String toString() {
-        return login + " " + password + " " + name + " " + surname + " " + phoneNumber + " " + address + " " + workHours + "\t" + dishes;
+        return name;
     }
 }

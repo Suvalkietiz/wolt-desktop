@@ -34,6 +34,6 @@ public class Driver extends User {
     }
     @Override
     public String toString() {
-        return login + " " + password + " " + name + " " + surname + " " + phoneNumber + " " + address + " " + driverLicense + " " + birthDate;
+        return name;
     }
 }
