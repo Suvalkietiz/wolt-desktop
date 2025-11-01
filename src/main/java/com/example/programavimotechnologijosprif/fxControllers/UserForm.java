@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,14 +34,58 @@ public class UserForm {
     @FXML public TextField workHoursField;
     @FXML public DatePicker birthDateField;
     @FXML public TextField drivingLicenseID;
+    @FXML public Button updateUserButton;
+    @FXML public Button createUserButton;
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
 
+    private User userForUpdate;
 
-    public void setData(EntityManagerFactory entityManagerFactory) {
+    public void setData(EntityManagerFactory entityManagerFactory, User updateUser) {
         this.entityManagerFactory = entityManagerFactory;
         this.genericHibernate = new GenericHibernate(entityManagerFactory);
+        this.userForUpdate = updateUser;
+        fillUserDataForUpdate();
+    }
+
+    private void fillUserDataForUpdate() {
+        if(userForUpdate != null) {
+            System.out.println("Client is updating a user");
+            createUserButton.setVisible(false);
+            updateUserButton.setVisible(true);
+            loginField.setText(userForUpdate.getLogin());
+            passwordField.setText(userForUpdate.getPassword());
+            nameField.setText(userForUpdate.getName());
+            surnameField.setText(userForUpdate.getSurname());
+            phoneNumberField.setText(userForUpdate.getPhoneNumber());
+            if(userForUpdate.isAdmin()){ // userForUpdate instanceof User
+                setUserRadio("Admin");
+                disableFields();
+            } else if(userForUpdate instanceof Restaurant) {
+                setUserRadio("Restaurant");
+                disableFields();
+                addressField.setText(((Restaurant) userForUpdate).getAddress());
+                workHoursField.setText(((Restaurant) userForUpdate).getWorkHours());
+            } else if(userForUpdate instanceof Driver) {
+                setUserRadio("Driver");
+                disableFields();
+                addressField.setText(((Driver) userForUpdate).getAddress());
+            } else if(userForUpdate instanceof AppUser){
+                setUserRadio("Client");
+                disableFields();
+                addressField.setText(((AppUser) userForUpdate).getAddress());
+            } else {
+                System.out.println("What is going on...??");
+            }
+            System.out.println("Selected User: " + userForUpdate);
+
+        } else {
+            System.out.println("Client is registing a user");
+            createUserButton.setVisible(true);
+            updateUserButton.setVisible(false);
+        }
+
     }
 
     @FXML public void createUser(ActionEvent actionEvent) {
@@ -52,7 +97,8 @@ public class UserForm {
                     passwordField.getText(),
                     nameField.getText(),
                     surnameField.getText(),
-                    phoneNumberField.getText());
+                    phoneNumberField.getText(),
+                    LocalDate.now());
             if(countEmptyFields() != 0) generateEmptyInputAlert();
             else genericHibernate.createEntity(admin, alertTitle, alertMessage);
         } else if(restaurantRadio.isSelected()){
@@ -64,7 +110,8 @@ public class UserForm {
                     phoneNumberField.getText(),
                     addressField.getText(),
                     workHoursField.getText(),
-                    new ArrayList<>()); // CHANGE ME
+                    new ArrayList<>(), // CHANGE ME
+                    LocalDate.now());
             if(countEmptyFields() != 0) generateEmptyInputAlert();
             else genericHibernate.createEntity(restaurant, alertTitle, alertMessage);
         } else if(driverRadio.isSelected()){
@@ -76,7 +123,8 @@ public class UserForm {
                     phoneNumberField.getText(),
                     addressField.getText(),
                     drivingLicenseID.getText(),
-                    birthDateField.getValue());
+                    birthDateField.getValue(),
+                    LocalDate.now());
             if(countEmptyFields() != 0) generateEmptyInputAlert();
             else genericHibernate.createEntity(driver, alertTitle, alertMessage);
         } else if(clientRadio.isSelected()){
@@ -86,13 +134,17 @@ public class UserForm {
                     nameField.getText(),
                     surnameField.getText(),
                     phoneNumberField.getText(),
-                    addressField.getText());
+                    addressField.getText(),
+                    LocalDate.now());
             if(countEmptyFields() != 0) generateEmptyInputAlert();
             else genericHibernate.createEntity(appUser, alertTitle, alertMessage);
         }
     }
 
-    @FXML public void disableFields(ActionEvent actionEvent) {
+    @FXML public void updateUser(ActionEvent actionEvent) {
+    }
+
+    @FXML public void disableFields() {
         if(userRadio.isSelected()) {
             clientBox.setVisible(false);
             driverBox.setVisible(false);
@@ -159,5 +211,37 @@ public class UserForm {
     private void generateEmptyInputAlert(){
         FxUtils.generateHeaderAlert(Alert.AlertType.ERROR, "Input Error", "Netinkama ivestis",
                 "Prasome ivesti: " + getEmptyFieldsMessage() + " laukus");
+    }
+    private void setUserRadio(String UserType){
+        switch(UserType){
+            case "Admin":
+                userRadio.setSelected(true);
+                driverRadio.setSelected(false);
+                restaurantRadio.setSelected(false);
+                clientRadio.setSelected(false);
+                break;
+            case "Driver":
+                userRadio.setSelected(false);
+                driverRadio.setSelected(true);
+                restaurantRadio.setSelected(false);
+                clientRadio.setSelected(false);
+                break;
+            case "Restaurant":
+                userRadio.setSelected(false);
+                driverRadio.setSelected(false);
+                restaurantRadio.setSelected(true);
+                clientRadio.setSelected(false);
+                break;
+            case "Client":
+                userRadio.setSelected(false);
+                driverRadio.setSelected(false);
+                restaurantRadio.setSelected(false);
+                clientRadio.setSelected(true);
+            default:
+                userRadio.setSelected(false);
+                driverRadio.setSelected(false);
+                restaurantRadio.setSelected(false);
+                clientRadio.setSelected(false);
+        }
     }
 }

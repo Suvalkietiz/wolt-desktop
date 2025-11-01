@@ -1,11 +1,17 @@
 package com.example.programavimotechnologijosprif.hibernateControllers;
 
+import com.example.programavimotechnologijosprif.model.FoodOrder;
+import com.example.programavimotechnologijosprif.model.Restaurant;
 import com.example.programavimotechnologijosprif.model.User;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Root;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomHibernate extends GenericHibernate {
     public CustomHibernate(EntityManagerFactory entityManagerFactory) {
@@ -32,4 +38,27 @@ public class CustomHibernate extends GenericHibernate {
         }
         return user;
     }
+
+
+
+    public List<FoodOrder> getRestaurantOrders(Restaurant restaurant) {
+        List<FoodOrder> foodOrders = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<FoodOrder> cq = cb.createQuery(FoodOrder.class);
+            Root<FoodOrder> root = cq.from(FoodOrder.class); // cia yra baze nuo kurios lipdau uzkluasa
+
+            cq.select(root).where(
+                cb.equal(root.get("restaurant"), restaurant)
+            );
+            Query q = entityManager.createQuery(cq);
+            foodOrders = q.getResultList();
+        } catch (Exception e){
+            // pagalvopsim ka daryt
+        }
+        return foodOrders;
+    }
+
+
 }

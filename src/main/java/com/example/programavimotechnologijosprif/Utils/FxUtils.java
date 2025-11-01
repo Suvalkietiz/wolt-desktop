@@ -1,13 +1,12 @@
 package com.example.programavimotechnologijosprif.Utils;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Optional;
 
 public class FxUtils {
     public static void generateHeaderAlert(Alert.AlertType alertType, String title, String header, String content){
@@ -61,5 +60,25 @@ public class FxUtils {
         alert.getDialogPane().setExpandableContent(expContent);
 
         alert.showAndWait();
+    }
+
+
+    public static boolean generateConfirmationAlert(Alert.AlertType alertType, String title, String content){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+
+
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType continueButton = new ButtonType("Continue");
+        alert.getButtonTypes().setAll(cancelButton, continueButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == continueButton){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

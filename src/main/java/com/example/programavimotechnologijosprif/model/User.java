@@ -35,6 +35,15 @@ public class User implements Serializable {
         this.phoneNumber = phoneNumber;
         this.isAdmin = false;
     }
+    public User(String login, String password, String name, String surname, String phoneNumber, LocalDate dateCreated) {
+        this.login = login;
+        this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.isAdmin = false;
+        this.dateCreated = dateCreated;
+    }
     public User(String login, String password){
         this.login = login;
         this.password = password;

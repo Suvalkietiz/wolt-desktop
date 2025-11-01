@@ -35,7 +35,7 @@ public class LoginForm {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-form.fxml"));
 
             Parent parent = fxmlLoader.load();
-            MainForm mainForm = (MainForm) fxmlLoader.<MainForm>getController();
+            MainForm mainForm = (MainForm) fxmlLoader.getController();
             mainForm.setData(entityManagerFactory);
             mainForm.setRole(user);
 
@@ -56,7 +56,7 @@ public class LoginForm {
         // jei nori pasiaiskink papildomai sitas tris eilutes
         Parent parent = fxmlLoader.load();
         UserForm userForm = (UserForm) fxmlLoader.<UserForm>getController();
-        userForm.setData(entityManagerFactory);
+        userForm.setData(entityManagerFactory, null);
 
         Scene scene = new Scene(parent);
         Stage stage = new Stage();

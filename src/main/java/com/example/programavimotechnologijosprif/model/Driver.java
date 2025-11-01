@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Setter
@@ -28,6 +29,14 @@ public class Driver extends User {
     public Driver(String login, String password, String name, String surname, String phoneNumber,
                   String address, String driverLicense, LocalDate birthDate) {
         super(login, password, name, surname, phoneNumber);
+        this.address = address;
+        this.driverLicense = driverLicense;
+        this.birthDate = birthDate;
+    }
+
+    public Driver(String login, String password, String name, String surname, String phoneNumber,
+                  String address, String driverLicense, LocalDate birthDate, LocalDate dateCreated) {
+        super(login, password, name, surname, phoneNumber, dateCreated);
         this.address = address;
         this.driverLicense = driverLicense;
         this.birthDate = birthDate;

@@ -11,12 +11,15 @@ module com.example.programavimotechnologijosprif {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires static lombok;
+    requires javafx.graphics;
     //requires javafx.graphics;
 
     opens com.example.programavimotechnologijosprif to javafx.fxml;
     exports com.example.programavimotechnologijosprif;
-    exports com.example.programavimotechnologijosprif.fxControllers to javafx.fxml;
+    exports com.example.programavimotechnologijosprif.fxControllers;
     opens com.example.programavimotechnologijosprif.fxControllers to javafx.fxml;
     opens com.example.programavimotechnologijosprif.model to org.hibernate.orm.core;
     exports com.example.programavimotechnologijosprif.model;
+
+    //opens com.example.programavimotechnologijosprif.fxControllers to javafx.base;
 }
