@@ -25,15 +25,23 @@ public class NewOrderForm {
     private EntityManagerFactory  entityManagerFactory;
     private GenericHibernate genericHibernate;
 
-    public void setData(EntityManagerFactory entityManagerFactory){
+    private User loggedUser = null;
+
+    public void setData(EntityManagerFactory entityManagerFactory, User loggedUser){
         this.entityManagerFactory = entityManagerFactory;
         genericHibernate = new GenericHibernate(entityManagerFactory);
+        this.loggedUser = loggedUser;
         initializeComboBoxes();
     }
     private void initializeComboBoxes(){
         selectAppUserBox.getItems().addAll(genericHibernate.getAllRecords(AppUser.class));
         selectDriverBox.getItems().addAll(genericHibernate.getAllRecords(Driver.class));
-        selectRestaurantBox.getItems().addAll(genericHibernate.getAllRecords(Restaurant.class));
+        if(loggedUser instanceof Restaurant){
+            selectRestaurantBox.setValue((Restaurant) loggedUser);
+            selectRestaurantBox.setDisable(true);
+            CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+            restaurantFoodList.getItems().addAll(customHibernate.getRestaurantFood((Restaurant) loggedUser));
+        } else selectRestaurantBox.getItems().addAll(genericHibernate.getAllRecords(Restaurant.class));
     }
 
     @FXML public void setRestaurantFood(ActionEvent actionEvent) {

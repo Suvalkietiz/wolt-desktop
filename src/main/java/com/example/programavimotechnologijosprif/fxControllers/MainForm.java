@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -29,8 +30,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainForm implements Initializable {
-    @FXML public TabPane adminPane;
-    @FXML public TabPane restaurantPane;
 
     //<editor-fold desc="User Management Tab elements">
     @FXML public Tab userManagementTab;
@@ -68,6 +67,8 @@ public class MainForm implements Initializable {
     @FXML public ListView<FoodOrder> userOrderList;
     //</editor-fold>
 
+    @FXML public TabPane managementTabPane;
+    @FXML public AnchorPane adminUserManagement;
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
@@ -76,6 +77,8 @@ public class MainForm implements Initializable {
 
     private Restaurant selectedRestaurant = null;
     private User orderUser = null;
+
+    private int run = 0;
 
 
     //<editor-fold desc="Initializing methods">
@@ -106,19 +109,29 @@ public class MainForm implements Initializable {
     public void setRole(User currUser){
         if(currUser != null){
             this.loggedUser = currUser;
+            SingleSelectionModel<Tab> selectionModel = managementTabPane.getSelectionModel();
             if(loggedUser.isAdmin()){
                 System.out.println("User is Admin");
-                adminPane.setVisible(true);
-                restaurantPane.setVisible(false);
+                selectionModel.select(0);
+                adminUserManagement.setVisible(true);
             } else if(loggedUser instanceof Restaurant) {
                 System.out.println("User is Restaurant");
-                adminPane.setVisible(false);
-                restaurantPane.setVisible(true);
+                selectionModel.select(1);
+                adminUserManagement.setVisible(false);
+
+                //Restaurant Management Tab:
+                selectRestaurantBox.setDisable(true);
+                selectRestaurantBox.setValue((Restaurant) loggedUser);
+                renderRestaurantFood();
+
+                //Order Management Tab:
+                orderUser = loggedUser;
+                selectUserBox.setDisable(true);
+                selectUserBox.setValue(loggedUser);
             } else {
                 System.out.println("Unkown User Type");
-                adminPane.setVisible(false);
-                restaurantPane.setVisible(false);
-                FxUtils.generateAlert(Alert.AlertType.ERROR, "User Error", "Logged in user is neither 'Admin' nor 'Restaurant'.");
+                FxUtils.generateAlert(Alert.AlertType.ERROR, "Get lost", "Logged in user is neither 'Admin' nor 'Restaurant'.");
+                System.exit(0);
             }
         }
     }
@@ -132,7 +145,7 @@ public class MainForm implements Initializable {
 
 
 
-    @FXML public void loadRestaurantManagementData(Event event) {
+    @FXML public void loadRestaurantManagementData() {
         // set combo box values
         selectRestaurantBox.getItems().clear();
         System.out.println("Reloading Restaurant Management");
@@ -146,14 +159,27 @@ public class MainForm implements Initializable {
         if(loggedUser.isAdmin()){
             selectedRestaurant = null;
         } else {
-            // cia jeigu prisijunges yra restoranas, tai priskirti restorana
-            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            selectedRestaurant = (Restaurant) loggedUser;
         }
 
     }
 
 
     @FXML public void reloadTableData() {
+        if(loggedUser instanceof Restaurant){
+            // shitload of mistakes here
+            // problema - restorantUserOpenUserForm dublikuoja openUserForm . reloadTableData metodas kvieciamas ++ kartu negu reikia
+            // ivykdzius update duomenu baze atnaujinama, bet pati user-form kai kvieciama is update lieka tokia pati
+            System.out.println("Restorant is detected");
+            if(run%2 == 1) { // XDDDD
+                try {
+                    restorantUserOpenUserForm();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            run++;
+        }
         ObservableList<UserTableParamaters> data = FXCollections.observableArrayList();
         if(userManagementTab.isSelected()){
             userTable.getItems().clear();
@@ -236,7 +262,7 @@ public class MainForm implements Initializable {
     }
 
 
-    @FXML public void openUserForm(ActionEvent actionEvent) throws IOException {
+    @FXML public void openUserForm() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
         Parent parent = fxmlLoader.load();
 
@@ -258,6 +284,24 @@ public class MainForm implements Initializable {
         System.out.println("closed");
         reloadTableData();
     }
+    // ----------- code dublication -----------
+    private void restorantUserOpenUserForm() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
+        Parent parent = fxmlLoader.load();
+
+        UserForm userForm = fxmlLoader.getController();
+        userForm.setData(entityManagerFactory, loggedUser);
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(parent);
+        stage.setScene(scene);
+        stage.setTitle("Update User");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+
+        System.out.println("closed");
+    }
+
 
     @FXML public void selectedFilter(ActionEvent actionEvent) {
         reloadTableData();
@@ -453,7 +497,9 @@ public class MainForm implements Initializable {
         selectUserBox.getItems().clear();
         selectUserBox.getItems().addAll(genericHibernate.getAllRecords(User.class));
         disableOrderFields();
+
         userOrderList.getItems().clear();
+        fillUserOrders();
     }
 
     @FXML public void setUserOrders(ActionEvent actionEvent) {
@@ -480,7 +526,7 @@ public class MainForm implements Initializable {
         Parent parent = fxmlLoader.load();
 
         NewOrderForm newOrderForm = fxmlLoader.getController();
-        newOrderForm.setData(entityManagerFactory);
+        newOrderForm.setData(entityManagerFactory, loggedUser);
 
         Stage stage = new Stage();
         Scene scene = new Scene(parent);
