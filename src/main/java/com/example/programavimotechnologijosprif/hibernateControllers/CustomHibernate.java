@@ -43,31 +43,6 @@ public class CustomHibernate extends GenericHibernate {
     }
 
 
-
-    public List<FoodOrder> getRestaurantOrders(Restaurant restaurant) {
-        List<FoodOrder> foodOrders = new ArrayList<>();
-        try{
-            entityManager = entityManagerFactory.createEntityManager();
-            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-            CriteriaQuery<FoodOrder> cq = cb.createQuery(FoodOrder.class);
-            Root<FoodOrder> root = cq.from(FoodOrder.class); // cia yra baze nuo kurios lipdau uzkluasa
-
-            cq.select(root).where(
-                cb.equal(root.get("restaurant"), restaurant)
-            );
-            Query q = entityManager.createQuery(cq);
-            foodOrders = q.getResultList();
-        } catch (Exception e){
-            // pagalvopsim ka daryt
-        } finally {
-            if(entityManager != null){
-                entityManager.close();
-            }
-        }
-        return foodOrders;
-    }
-
-
     public List<Food> getRestaurantFood(Restaurant restaurant) {
         List<Food> food = new ArrayList<>();
         try{
@@ -90,4 +65,46 @@ public class CustomHibernate extends GenericHibernate {
         }
         return food;
     }
+
+
+
+
+    public List<FoodOrder> getAppUserOrders(AppUser user) {
+        return getUserFoodOrders("appUser", user);
+    }
+
+    public List<FoodOrder> getRestaurantOrders(Restaurant restaurant) {
+
+        return getUserFoodOrders("restaurant", restaurant);
+    }
+
+    public List<FoodOrder> getDriverOrders(Driver driver) {
+        return getUserFoodOrders("driver", driver);
+    }
+    /*
+    public List<FoodOrder> getRestaurantOrders(Restaurant restaurant) {
+        List<FoodOrder> foodOrders = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<FoodOrder> cq = cb.createQuery(FoodOrder.class);
+            Root<FoodOrder> root = cq.from(FoodOrder.class); // cia yra baze nuo kurios lipdau uzkluasa
+
+            cq.select(root).where(
+                    cb.equal(root.get("restaurant"), restaurant)
+            );
+            Query q = entityManager.createQuery(cq);
+            foodOrders = q.getResultList();
+        } catch (Exception e){
+            // pagalvopsim ka daryt
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+        return foodOrders;
+    }
+    */
+
+
 }

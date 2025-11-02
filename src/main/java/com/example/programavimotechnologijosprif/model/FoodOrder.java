@@ -51,4 +51,9 @@ public class FoodOrder {
         status = Status.COMPLETED;
         timeCompleted = LocalDateTime.now();
     }
+
+    @Override
+    public String toString() {
+        return "Created: " + timeCreated;
+    }
 }

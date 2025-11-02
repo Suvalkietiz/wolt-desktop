@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.MainForm">
    <children>
@@ -83,8 +84,13 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
+                              <Label layoutX="10.0" layoutY="7.0" prefHeight="10.0" prefWidth="250.0" text="Nononono, nobody updates  an order ;)">
+                                 <font>
+                                    <Font size="8.0" />
+                                 </font>
+                              </Label>
                               <ComboBox fx:id="selectUserBox" layoutX="24.0" layoutY="29.0" onAction="#setUserOrders" prefHeight="28.0" prefWidth="156.0" promptText="- Select User -" />
-                              <ListView fx:id="testorders" layoutX="25.0" layoutY="72.0" prefHeight="261.0" prefWidth="248.0" />
+                              <ListView fx:id="userOrderList" layoutX="25.0" layoutY="72.0" onMouseClicked="#fillOrderItems" prefHeight="261.0" prefWidth="248.0" />
                               <VBox layoutX="277.0" layoutY="28.0" prefHeight="328.0" prefWidth="314.0">
                                  <children>
                                     <HBox prefHeight="45.0" prefWidth="314.0" spacing="50.0">
@@ -131,7 +137,8 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <Button layoutX="23.0" layoutY="341.0" mnemonicParsing="false" onAction="#createOrder" prefHeight="26.0" prefWidth="247.0" text="Create New Order" />
+                              <Button layoutX="23.0" layoutY="341.0" mnemonicParsing="false" onAction="#createOrder" prefHeight="26.0" prefWidth="123.0" text="Create New Order" />
+                              <Button layoutX="182.0" layoutY="342.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="26.0" prefWidth="91.0" text="Delete Order" />
                            </children></AnchorPane>
                      </content>
                   </Tab>

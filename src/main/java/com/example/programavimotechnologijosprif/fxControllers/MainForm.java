@@ -65,6 +65,7 @@ public class MainForm implements Initializable {
     @FXML public TextField orderCreatedOnField;
     @FXML public TextField orderCompletedField;
     @FXML public ListView<Food> orderItemsList;
+    @FXML public ListView<FoodOrder> userOrderList;
     //</editor-fold>
 
 
@@ -452,11 +453,26 @@ public class MainForm implements Initializable {
         selectUserBox.getItems().clear();
         selectUserBox.getItems().addAll(genericHibernate.getAllRecords(User.class));
         disableOrderFields();
+        userOrderList.getItems().clear();
     }
 
     @FXML public void setUserOrders(ActionEvent actionEvent) {
-        // show user orders in list view....
-        //change order user to not null
+        clearOrderFields();
+        orderUser = selectUserBox.getSelectionModel().getSelectedItem();
+        fillUserOrders();
+    }
+    private void fillUserOrders(){
+        if(orderUser == null) return;
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+        userOrderList.getItems().clear();
+
+        if(orderUser instanceof Restaurant){
+            userOrderList.getItems().addAll(customHibernate.getRestaurantOrders((Restaurant) orderUser));
+        } else if(orderUser instanceof Driver){
+            userOrderList.getItems().addAll(customHibernate.getDriverOrders((Driver) orderUser));
+        } else if (orderUser instanceof AppUser) {
+            userOrderList.getItems().addAll(customHibernate.getAppUserOrders((AppUser) orderUser));
+        }
     }
 
     @FXML public void createOrder(ActionEvent actionEvent) throws IOException {
@@ -476,4 +492,34 @@ public class MainForm implements Initializable {
         System.out.println("closed");
         // if smth is selected then reload list data
     }
+
+    @FXML public void deleteOrder(ActionEvent actionEvent) {
+        if(orderUser == null) return;
+        if(userOrderList.getSelectionModel().getSelectedItem() == null){
+            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Ka tu cia", "Select food order to delete");
+            return;
+        }
+        if(FxUtils.generateConfirmationAlert(Alert.AlertType.INFORMATION, "Are you sure?", "Do you really want to delete selected food order?")){
+            userOrderList.getSelectionModel().getSelectedItem();
+            genericHibernate.deleteEntityById(FoodOrder.class, userOrderList.getSelectionModel().getSelectedItem().getId());
+            clearOrderFields();
+            userOrderList.getItems().clear();
+            fillUserOrders();
+        }
+    }
+
+    @FXML public void fillOrderItems(MouseEvent mouseEvent) {
+        clearOrderFields();
+        FoodOrder selectedFoodOrder = userOrderList.getSelectionModel().getSelectedItem();
+        if(selectedFoodOrder == null) return; // dead code?
+        orderAppUserField.setText(String.valueOf(selectedFoodOrder.getAppUser()));
+        orderDriverField.setText(String.valueOf(selectedFoodOrder.getDriver()));
+        orderRestaurantField.setText(String.valueOf(selectedFoodOrder.getRestaurant()));
+        orderPriceField.setText(String.valueOf(selectedFoodOrder.getPrice()));
+        orderCreatedOnField.setText(selectedFoodOrder.getTimeCreated().toString());
+        if(selectedFoodOrder.getStatus().equals(Status.COMPLETED))
+            orderCompletedField.setText(selectedFoodOrder.getTimeCompleted().toString());
+        orderItemsList.getItems().addAll(selectedFoodOrder.getItems());
+    }
+
 }

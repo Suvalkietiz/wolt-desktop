@@ -6,6 +6,8 @@ package com.example.programavimotechnologijosprif.hibernateControllers;
 
 import com.example.programavimotechnologijosprif.Utils.FxUtils;
 import com.example.programavimotechnologijosprif.model.Driver;
+import com.example.programavimotechnologijosprif.model.FoodOrder;
+import com.example.programavimotechnologijosprif.model.Restaurant;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -129,4 +131,49 @@ public class GenericHibernate {
         }
         return entity;
     }
+
+
+
+
+    protected List<FoodOrder> getUserFoodOrders(String attributeNameInFoodOrders, Object userEntity) {
+        List<FoodOrder> foodOrders = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<FoodOrder> cq = cb.createQuery(FoodOrder.class);
+            Root<FoodOrder> root = cq.from(FoodOrder.class); // cia yra baze nuo kurios lipdau uzkluasa
+
+            cq.select(root).where(
+                    cb.equal(root.get(attributeNameInFoodOrders), userEntity)
+            );
+            foodOrders = entityManager.createQuery(cq).getResultList();
+
+            //chatgpt for looP:
+            // ✅ FORCE LOAD lazy relationships BEFORE closing EM
+            for (FoodOrder order : foodOrders) {
+
+                // These are safe and trigger the lazy loads:
+                if (order.getAppUser() != null)
+                    order.getAppUser().getId();
+
+                if (order.getDriver() != null)
+                    order.getDriver().getId();
+
+                if (order.getRestaurant() != null)
+                    order.getRestaurant().getId();
+
+                // Trigger load of the items collection
+                order.getItems().size();
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+        return foodOrders;
+    }
+
 }
