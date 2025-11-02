@@ -42,8 +42,4 @@ public class Restaurant extends User {
         this.dishes = dishes;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
 }

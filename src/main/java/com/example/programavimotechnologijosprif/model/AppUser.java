@@ -40,10 +40,6 @@ public class AppUser extends User implements Serializable {
     public AppUser(String login, String password){
         super(login, password);
     }
-    @Override
-    public String toString() {
-        return login + " " + password + " " + name + " " + surname + " " + phoneNumber + " " + address;
-    }
 
     public void addOrder(FoodOrder foodOrder){
         this.myOrders.add(foodOrder);

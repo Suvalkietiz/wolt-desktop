@@ -31,4 +31,24 @@ public class FoodOrder {
         timeCreated = LocalDateTime.now();
         status = Status.PENDING;
     }
+
+    public FoodOrder(AppUser client, Driver driver, Restaurant restaurant,  List<Food> FoodItems) {
+        this.appUser = client;
+        this.driver = driver;
+        this.restaurant = restaurant;
+        this.items = FoodItems;
+        price = 0;
+        timeCreated = LocalDateTime.now();
+        status = Status.PENDING;
+    }
+
+    public void calculatePrice() {
+        for (Food food : items) {
+            price += food.getPrice();
+        }
+    }
+    public void completeOrder() {
+        status = Status.COMPLETED;
+        timeCompleted = LocalDateTime.now();
+    }
 }

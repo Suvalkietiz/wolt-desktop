@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.NewOrderForm">
+   <children>
+      <VBox layoutX="14.0" layoutY="24.0" prefHeight="135.0" prefWidth="314.0">
+         <children>
+            <HBox prefHeight="45.0" prefWidth="314.0" spacing="50.0">
+               <children>
+                  <Label text="Client" />
+                  <ComboBox fx:id="selectAppUserBox" prefHeight="26.0" prefWidth="230.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="45.0" prefWidth="314.0" spacing="50.0">
+               <children>
+                  <Label text="Driver" />
+                  <ComboBox fx:id="selectDriverBox" prefHeight="26.0" prefWidth="230.0" />
+               </children>
+            </HBox>
+            <HBox prefHeight="45.0" prefWidth="314.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="83.0" text="Restaurant" />
+                  <ComboBox fx:id="selectRestaurantBox" onAction="#setRestaurantFood" prefHeight="26.0" prefWidth="230.0" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox layoutX="14.0" layoutY="159.0" prefHeight="116.0" prefWidth="314.0">
+         <children>
+            <Label prefHeight="39.0" prefWidth="83.0" text="Restaurant Cuisine" wrapText="true" />
+            <ListView fx:id="restaurantFoodList" prefHeight="94.0" prefWidth="227.0" />
+         </children>
+      </HBox>
+      <ListView fx:id="orderFoodList" layoutX="384.0" layoutY="41.0" prefHeight="201.0" prefWidth="208.0" />
+      <Button layoutX="99.0" layoutY="294.0" mnemonicParsing="false" onAction="#addFood" prefHeight="26.0" prefWidth="96.0" text="Add Item" />
+      <Button layoutX="384.0" layoutY="253.0" mnemonicParsing="false" onAction="#deleteFood" prefHeight="26.0" prefWidth="96.0" text="Delete Item" />
+      <Label layoutX="384.0" layoutY="24.0" text="Order Items" />
+      <Button layoutX="11.0" layoutY="360.0" mnemonicParsing="false" onAction="#createFoodOrder" prefHeight="26.0" prefWidth="581.0" text="Create Order">
+         <font>
+            <Font name="System Bold" size="13.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

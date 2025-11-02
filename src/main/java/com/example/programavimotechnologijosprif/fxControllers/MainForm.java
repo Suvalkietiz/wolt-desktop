@@ -56,6 +56,17 @@ public class MainForm implements Initializable {
     @FXML public ListView<Food> restaurantFoodList;
     //</editor-fold>
 
+    //<editor-fold desc="Order Management Tab elements">
+    @FXML public ComboBox<User> selectUserBox;
+    @FXML public TextField orderAppUserField;
+    @FXML public TextField orderDriverField;
+    @FXML public TextField orderRestaurantField;
+    @FXML public TextField orderPriceField;
+    @FXML public TextField orderCreatedOnField;
+    @FXML public TextField orderCompletedField;
+    @FXML public ListView<Food> orderItemsList;
+    //</editor-fold>
+
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
@@ -63,6 +74,7 @@ public class MainForm implements Initializable {
     private User loggedUser;
 
     private Restaurant selectedRestaurant = null;
+    private User orderUser = null;
 
 
     //<editor-fold desc="Initializing methods">
@@ -414,4 +426,54 @@ public class MainForm implements Initializable {
         restaurantFoodList.getItems().addAll(customHibernate.getRestaurantFood(selectedRestaurant));
     }
 
+
+    //[==================================]
+
+    private void clearOrderFields(){
+        orderAppUserField.clear();
+        orderDriverField.clear();
+        orderRestaurantField.clear();
+        orderPriceField.clear();
+        orderCreatedOnField.clear();
+        orderCompletedField.clear();
+        orderItemsList.getItems().clear();
+    }
+    private void disableOrderFields() {
+        clearOrderFields();
+        orderAppUserField.setDisable(true);
+        orderDriverField.setDisable(true);
+        orderRestaurantField.setDisable(true);
+        orderPriceField.setDisable(true);
+        orderCreatedOnField.setDisable(true);
+        orderCompletedField.setDisable(true);
+        orderItemsList.setDisable(true);
+    }
+    @FXML public void loadOrderData(Event event) {
+        selectUserBox.getItems().clear();
+        selectUserBox.getItems().addAll(genericHibernate.getAllRecords(User.class));
+        disableOrderFields();
+    }
+
+    @FXML public void setUserOrders(ActionEvent actionEvent) {
+        // show user orders in list view....
+        //change order user to not null
+    }
+
+    @FXML public void createOrder(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("newOrder-view.fxml"));
+        Parent parent = fxmlLoader.load();
+
+        NewOrderForm newOrderForm = fxmlLoader.getController();
+        newOrderForm.setData(entityManagerFactory);
+
+        Stage stage = new Stage();
+        Scene scene = new Scene(parent);
+        stage.setScene(scene);
+        stage.setTitle("Create New Order");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+
+        System.out.println("closed");
+        // if smth is selected then reload list data
+    }
 }

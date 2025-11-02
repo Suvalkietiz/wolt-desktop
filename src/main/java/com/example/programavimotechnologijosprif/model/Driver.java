@@ -41,8 +41,4 @@ public class Driver extends User {
         this.driverLicense = driverLicense;
         this.birthDate = birthDate;
     }
-    @Override
-    public String toString() {
-        return name;
-    }
 }
