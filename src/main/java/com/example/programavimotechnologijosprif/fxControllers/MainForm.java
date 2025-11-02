@@ -490,7 +490,7 @@ public class MainForm implements Initializable {
         stage.showAndWait();
 
         System.out.println("closed");
-        // if smth is selected then reload list data
+        fillUserOrders();
     }
 
     @FXML public void deleteOrder(ActionEvent actionEvent) {

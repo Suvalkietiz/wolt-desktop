@@ -83,9 +83,9 @@ public class NewOrderForm {
     }
 
     private void clearAllFields(){
-        selectAppUserBox.getItems().clear();
-        selectDriverBox.getItems().clear();
-        selectRestaurantBox.getItems().clear();
+        selectAppUserBox.getSelectionModel().clearSelection();
+        selectDriverBox.getSelectionModel().clearSelection();
+        selectRestaurantBox.getSelectionModel().clearSelection();
         orderFoodList.getItems().clear();
         restaurantFoodList.getItems().clear();
     }
