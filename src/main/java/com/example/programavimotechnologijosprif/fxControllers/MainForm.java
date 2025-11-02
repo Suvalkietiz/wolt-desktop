@@ -121,6 +121,7 @@ public class MainForm implements Initializable {
 
     @FXML public void loadRestaurantManagementData(Event event) {
         // set combo box values
+        selectRestaurantBox.getItems().clear();
         System.out.println("Reloading Restaurant Management");
         List<User> allUsers = genericHibernate.getAllRecords(User.class);
         List<Restaurant> allRestaurants = new ArrayList<>();
@@ -322,6 +323,7 @@ public class MainForm implements Initializable {
     @FXML public void setRestaurant(ActionEvent actionEvent) {
         selectedRestaurant = selectRestaurantBox.getValue();
         renderRestaurantFood();
+        clearFoodInputFields();
     }
 
     @FXML public void setFood(MouseEvent mouseEvent) {
@@ -335,7 +337,10 @@ public class MainForm implements Initializable {
 
     @FXML public void deleteFood(ActionEvent actionEvent) {
         if(selectedRestaurant == null) return;
-        if(restaurantFoodList.getSelectionModel().getSelectedItem() == null) return;
+        if(restaurantFoodList.getSelectionModel().getSelectedItem() == null){
+            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Ka tu cia", "Select food which you want to delete");
+            return;
+        }
         genericHibernate.deleteEntityById(Food.class, restaurantFoodList.getSelectionModel().getSelectedItem().getId());
         clearFoodInputFields();
         renderRestaurantFood();
