@@ -265,12 +265,21 @@ public class MainForm implements Initializable {
             case "Restaurant":
                 Restaurant restaurant = new Restaurant();
                 restaurant.setAddress(parameterUser.getAddress());
+
+                Restaurant rtemp = genericHibernate.getEntityById(Restaurant.class, parameterUser.getId());
+                restaurant.setWorkHours(rtemp.getWorkHours());
+
                 seletedUser = restaurant;
                 break;
 
             case "Driver":
                 Driver driver = new Driver();
                 driver.setAddress(parameterUser.getAddress());
+
+                Driver dtemp = genericHibernate.getEntityById(Driver.class, parameterUser.getId());
+                driver.setBirthDate(dtemp.getBirthDate());
+                driver.setDriverLicense(dtemp.getDriverLicense());
+
                 seletedUser = driver;
                 break;
 
@@ -400,8 +409,4 @@ public class MainForm implements Initializable {
         restaurantFoodList.getItems().addAll(customHibernate.getRestaurantFood(selectedRestaurant));
     }
 
-
-
-    // todo:
-    //user formoje kai paspaudi update neuzpildo siu lauku: driver b-day, driver license id, restaiurant work hrs
 }

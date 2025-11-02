@@ -11,8 +11,47 @@ public class UserTableParamaters {
     private SimpleStringProperty name =  new SimpleStringProperty();
     private SimpleStringProperty surname =  new SimpleStringProperty();
     private SimpleStringProperty phoneNumber =  new SimpleStringProperty();
-    private SimpleStringProperty address =  new SimpleStringProperty();
     private SimpleStringProperty dateCreated = new SimpleStringProperty();
+    private SimpleStringProperty address =  new SimpleStringProperty();
+    private SimpleStringProperty workHours =  new SimpleStringProperty();
+    private SimpleStringProperty birthDate =  new SimpleStringProperty();
+    private SimpleStringProperty driverLicense =  new SimpleStringProperty();
+
+    public String getBirthDate() {
+        return birthDate.get();
+    }
+
+    public SimpleStringProperty birthDateProperty() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate.set(birthDate);
+    }
+
+    public String getDriverLicense() {
+        return driverLicense.get();
+    }
+
+    public SimpleStringProperty driverLicenseProperty() {
+        return driverLicense;
+    }
+
+    public void setDriverLicense(String driverLicense) {
+        this.driverLicense.set(driverLicense);
+    }
+
+    public String getWorkHours() {
+        return workHours.get();
+    }
+
+    public SimpleStringProperty workHoursProperty() {
+        return workHours;
+    }
+
+    public void setWorkHours(String workHours) {
+        this.workHours.set(workHours);
+    }
 
     public String getDateCreated() {
         return dateCreated.get();

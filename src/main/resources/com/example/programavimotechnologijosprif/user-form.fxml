@@ -3,13 +3,11 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.UserForm">
@@ -34,17 +32,6 @@
             <VBox fx:id="restaurantBox" layoutY="26.0" prefHeight="364.0" prefWidth="226.0">
                <children>
                   <TextField fx:id="workHoursField" prefHeight="26.0" prefWidth="160.0" promptText="Work hours" />
-                  <Label prefHeight="26.0" prefWidth="88.0" text="Cuisine" />
-                  <ListView prefHeight="162.0" prefWidth="226.0" />
-                  <TextField promptText="Dish name" />
-                  <TextField promptText="Ingredients" />
-                  <TextField promptText="Allergens" />
-                  <HBox prefHeight="32.0" prefWidth="226.0">
-                     <children>
-                        <Button mnemonicParsing="false" text="Add dish" />
-                        <Button mnemonicParsing="false" text="Delete dish" />
-                     </children>
-                  </HBox>
                </children>
             </VBox>
             <VBox fx:id="driverBox" layoutY="26.0" prefHeight="364.0" prefWidth="226.0">

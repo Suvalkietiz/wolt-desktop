@@ -71,6 +71,8 @@ public class UserForm {
                 setUserRadio("Driver");
                 disableFields();
                 addressField.setText(((Driver) userForUpdate).getAddress());
+                birthDateField.setValue(((Driver) userForUpdate).getBirthDate());
+                drivingLicenseID.setText(((Driver) userForUpdate).getDriverLicense());
             } else if(userForUpdate instanceof AppUser){
                 setUserRadio("AppUser");
                 disableFields();
@@ -159,7 +161,7 @@ public class UserForm {
             driverBox.setVisible(false);
             restaurantBox.setVisible(false);
         }
-        
+
     }
 
     //================================================================

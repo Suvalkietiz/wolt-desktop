@@ -1,9 +1,6 @@
 package com.example.programavimotechnologijosprif.hibernateControllers;
 
-import com.example.programavimotechnologijosprif.model.Food;
-import com.example.programavimotechnologijosprif.model.FoodOrder;
-import com.example.programavimotechnologijosprif.model.Restaurant;
-import com.example.programavimotechnologijosprif.model.User;
+import com.example.programavimotechnologijosprif.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -11,6 +8,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Root;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,10 +90,4 @@ public class CustomHibernate extends GenericHibernate {
         }
         return food;
     }
-
-
-
-
-
-
 }

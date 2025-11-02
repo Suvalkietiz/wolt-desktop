@@ -5,12 +5,16 @@
 package com.example.programavimotechnologijosprif.hibernateControllers;
 
 import com.example.programavimotechnologijosprif.Utils.FxUtils;
+import com.example.programavimotechnologijosprif.model.Driver;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import javafx.scene.control.Alert;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,5 +108,25 @@ public class GenericHibernate {
             }
         }
         return list;
+    }
+
+
+    public <T> T getEntityById(Class<T> entityClass, int id){
+        T entity = null;
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<T> cq = cb.createQuery(entityClass);
+            Root<T> root = cq.from(entityClass);
+            cq.select(root).where(cb.equal(root.get("id"), id));
+            entity = entityManager.createQuery(cq).getSingleResult();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+        return entity;
     }
 }
