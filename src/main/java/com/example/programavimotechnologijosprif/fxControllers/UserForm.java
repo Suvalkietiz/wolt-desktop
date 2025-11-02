@@ -72,7 +72,7 @@ public class UserForm {
                 disableFields();
                 addressField.setText(((Driver) userForUpdate).getAddress());
             } else if(userForUpdate instanceof AppUser){
-                setUserRadio("Client");
+                setUserRadio("AppUser");
                 disableFields();
                 addressField.setText(((AppUser) userForUpdate).getAddress());
             } else {
@@ -139,9 +139,6 @@ public class UserForm {
             if(countEmptyFields() != 0) generateEmptyInputAlert();
             else genericHibernate.createEntity(appUser, alertTitle, alertMessage);
         }
-    }
-
-    @FXML public void updateUser(ActionEvent actionEvent) {
     }
 
     @FXML public void disableFields() {
@@ -232,16 +229,82 @@ public class UserForm {
                 restaurantRadio.setSelected(true);
                 clientRadio.setSelected(false);
                 break;
-            case "Client":
+            case "AppUser":
                 userRadio.setSelected(false);
                 driverRadio.setSelected(false);
                 restaurantRadio.setSelected(false);
                 clientRadio.setSelected(true);
+                break;
             default:
                 userRadio.setSelected(false);
                 driverRadio.setSelected(false);
                 restaurantRadio.setSelected(false);
                 clientRadio.setSelected(false);
+        }
+    }
+
+
+    // code dublicaiton of createUser to make updateUser
+    @FXML public void updateUser(ActionEvent actionEvent) {
+        if(userRadio.isSelected()){
+            User admin = new User(
+                    loginField.getText(),
+                    passwordField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumberField.getText(),
+                    userForUpdate.getDateCreated());
+            admin.setId(userForUpdate.getId());
+            admin.setDateUpdated(LocalDate.now());
+
+            if(countEmptyFields() != 0) generateEmptyInputAlert();
+            else genericHibernate.updateEntity(admin);
+        } else if(restaurantRadio.isSelected()){
+            Restaurant restaurant = new Restaurant(
+                    loginField.getText(),
+                    passwordField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumberField.getText(),
+                    addressField.getText(),
+                    workHoursField.getText(),
+                    new ArrayList<>(), // tikriausiai istrinsiu tiesiog ... CHANGE ME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    userForUpdate.getDateCreated());
+            restaurant.setId(userForUpdate.getId());
+            restaurant.setDateUpdated(LocalDate.now());
+
+            if(countEmptyFields() != 0) generateEmptyInputAlert();
+            else genericHibernate.updateEntity(restaurant);
+        } else if(driverRadio.isSelected()){
+            Driver driver = new Driver(
+                    loginField.getText(),
+                    passwordField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumberField.getText(),
+                    addressField.getText(),
+                    drivingLicenseID.getText(),
+                    birthDateField.getValue(),
+                    userForUpdate.getDateCreated());
+            driver.setId(userForUpdate.getId());
+            driver.setDateUpdated(LocalDate.now());
+
+            if(countEmptyFields() != 0) generateEmptyInputAlert();
+            else genericHibernate.updateEntity(driver);
+        } else if(clientRadio.isSelected()){
+            AppUser appUser = new AppUser(
+                    loginField.getText(),
+                    passwordField.getText(),
+                    nameField.getText(),
+                    surnameField.getText(),
+                    phoneNumberField.getText(),
+                    addressField.getText(),
+                    userForUpdate.getDateCreated());
+            appUser.setId(userForUpdate.getId());
+            appUser.setDateUpdated(LocalDate.now());
+
+            if(countEmptyFields() != 0) generateEmptyInputAlert();
+            else genericHibernate.updateEntity(appUser);
         }
     }
 }

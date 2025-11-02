@@ -30,7 +30,7 @@ public class FxUtils {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Exception Dialog");
         alert.setHeaderText("Look, an Exception Dialog");
-        alert.setContentText("Could not find file blabla.txt!");
+        alert.setContentText("Kazkas blogai!");
 
         //Exception ex = new FileNotFoundException("Could not find file blabla.txt");
 

@@ -1,5 +1,6 @@
 package com.example.programavimotechnologijosprif.hibernateControllers;
 
+import com.example.programavimotechnologijosprif.model.Food;
 import com.example.programavimotechnologijosprif.model.FoodOrder;
 import com.example.programavimotechnologijosprif.model.Restaurant;
 import com.example.programavimotechnologijosprif.model.User;
@@ -35,6 +36,10 @@ public class CustomHibernate extends GenericHibernate {
             user = (User)q.getSingleResult();
         } catch (Exception e){
             // pagalvopsim ka daryt
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
         }
         return user;
     }
@@ -56,9 +61,41 @@ public class CustomHibernate extends GenericHibernate {
             foodOrders = q.getResultList();
         } catch (Exception e){
             // pagalvopsim ka daryt
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
         }
         return foodOrders;
     }
+
+
+    public List<Food> getRestaurantFood(Restaurant restaurant) {
+        List<Food> food = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Food> cq = cb.createQuery(Food.class);
+            Root<Food> root = cq.from(Food.class); // cia yra baze nuo kurios lipdau uzkluasa
+
+            cq.select(root).where(
+                    cb.equal(root.get("restaurant"), restaurant)
+            );
+            Query q = entityManager.createQuery(cq);
+            food = q.getResultList();
+        } catch (Exception e){
+            // pagalvopsim ka daryt
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+        return food;
+    }
+
+
+
+
 
 
 }

@@ -2,15 +2,14 @@ package com.example.programavimotechnologijosprif.fxControllers;
 
 import com.example.programavimotechnologijosprif.HelloApplication;
 import com.example.programavimotechnologijosprif.Utils.FxUtils;
+import com.example.programavimotechnologijosprif.hibernateControllers.CustomHibernate;
 import com.example.programavimotechnologijosprif.hibernateControllers.GenericHibernate;
-import com.example.programavimotechnologijosprif.model.AppUser;
-import com.example.programavimotechnologijosprif.model.Driver;
-import com.example.programavimotechnologijosprif.model.Restaurant;
-import com.example.programavimotechnologijosprif.model.User;
+import com.example.programavimotechnologijosprif.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,6 +24,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -47,26 +47,30 @@ public class MainForm implements Initializable {
     @FXML public ComboBox<String> userTypeFilterBox;
     //</editor-fold>
 
+    //<editor-fold desc="Restaurant Management Tab elements">
+    @FXML public ComboBox<Restaurant> selectRestaurantBox;
+    @FXML public TextField dishNameField;
+    @FXML public ListView<Ingredients> availableIngredientsList;
+    @FXML public ListView<Ingredients> selectedIngredientList;
+    @FXML public TextField foodPriceField;
+    @FXML public ListView<Food> restaurantFoodList;
+    //</editor-fold>
 
-
-    //private ObservableList<UserTableParamaters> data = FXCollections.observableArrayList();
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
 
     private User loggedUser;
 
-    public void setData(EntityManagerFactory entityManagerFactory){
-        this.entityManagerFactory = entityManagerFactory;
-        genericHibernate = new GenericHibernate(entityManagerFactory);
-        reloadTableData();
-    }
+    private Restaurant selectedRestaurant = null;
 
+
+    //<editor-fold desc="Initializing methods">
     @Override
     public void initialize(URL location, ResourceBundle resources){
         System.out.println("Initializing MainForm");
         initializeUserTab();
-
+        //initializeRestaurantTab();
     }
 
     private void initializeUserTab(){
@@ -106,12 +110,36 @@ public class MainForm implements Initializable {
         }
     }
 
+    public void setData(EntityManagerFactory entityManagerFactory){
+        this.entityManagerFactory = entityManagerFactory;
+        genericHibernate = new GenericHibernate(entityManagerFactory);
+        reloadTableData();
+    }
+    //</editor-fold>
 
 
 
+    @FXML public void loadRestaurantManagementData(Event event) {
+        // set combo box values
+        System.out.println("Reloading Restaurant Management");
+        List<User> allUsers = genericHibernate.getAllRecords(User.class);
+        List<Restaurant> allRestaurants = new ArrayList<>();
+        for(User user : allUsers)if(user instanceof Restaurant)allRestaurants.add((Restaurant) user);
+        selectRestaurantBox.getItems().addAll(allRestaurants);
+        // set available ingredient list
+        availableIngredientsList.getItems().addAll(Ingredients.values());
+
+        if(loggedUser.isAdmin()){
+            selectedRestaurant = null;
+        } else {
+            // cia jeigu prisijunges yra restoranas, tai priskirti restorana
+            //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        }
+
+    }
 
 
-    public void reloadTableData() {
+    @FXML public void reloadTableData() {
         ObservableList<UserTableParamaters> data = FXCollections.observableArrayList();
         if(userManagementTab.isSelected()){
             userTable.getItems().clear();
@@ -176,7 +204,7 @@ public class MainForm implements Initializable {
     //============================================
 
 
-    public void deleteUser(ActionEvent actionEvent) {
+    @FXML public void deleteUser(ActionEvent actionEvent) {
         UserTableParamaters seletectedParameterUser = userTable.getSelectionModel().getSelectedItem();
         if(seletectedParameterUser != null) {
             if(seletectedParameterUser.getId() != loggedUser.getId()) {
@@ -194,7 +222,7 @@ public class MainForm implements Initializable {
     }
 
 
-    public void openUserForm(ActionEvent actionEvent) throws IOException {
+    @FXML public void openUserForm(ActionEvent actionEvent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("user-form.fxml"));
         Parent parent = fxmlLoader.load();
 
@@ -217,7 +245,7 @@ public class MainForm implements Initializable {
         reloadTableData();
     }
 
-    public void selectedFilter(ActionEvent actionEvent) {
+    @FXML public void selectedFilter(ActionEvent actionEvent) {
         reloadTableData();
     }
     //================================================================
@@ -256,8 +284,124 @@ public class MainForm implements Initializable {
         seletedUser.setName(parameterUser.getName());
         seletedUser.setSurname(parameterUser.getSurname());
         seletedUser.setPhoneNumber(parameterUser.getPhoneNumber());
+        seletedUser.setDateCreated(LocalDate.parse(parameterUser.getDateCreated()));
 
         return seletedUser;
     }
 
+
+
+
+
+    //[==================================]
+
+    private void clearFoodInputFields(){
+        dishNameField.clear();
+        selectedIngredientList.getItems().clear();
+        foodPriceField.clear();
+    }
+
+    @FXML public void deselectFood(ActionEvent actionEvent) {
+        if(selectedRestaurant == null) return;
+        restaurantFoodList.getSelectionModel().clearSelection();
+        clearFoodInputFields();
+    }
+
+
+
+
+    @FXML public void setRestaurant(ActionEvent actionEvent) {
+        selectedRestaurant = selectRestaurantBox.getValue();
+        renderRestaurantFood();
+    }
+
+    @FXML public void setFood(MouseEvent mouseEvent) {
+        if(selectedRestaurant == null) return;
+        clearFoodInputFields();
+
+        dishNameField.setText(restaurantFoodList.getSelectionModel().getSelectedItem().getName());
+        selectedIngredientList.getItems().addAll(restaurantFoodList.getSelectionModel().getSelectedItem().getIngredients());
+        foodPriceField.setText(String.valueOf(restaurantFoodList.getSelectionModel().getSelectedItem().getPrice()));
+    }
+
+    @FXML public void deleteFood(ActionEvent actionEvent) {
+        if(selectedRestaurant == null) return;
+        if(restaurantFoodList.getSelectionModel().getSelectedItem() == null) return;
+        genericHibernate.deleteEntityById(Food.class, restaurantFoodList.getSelectionModel().getSelectedItem().getId());
+        clearFoodInputFields();
+        renderRestaurantFood();
+    }
+
+
+    @FXML public void saveFood(ActionEvent actionEvent) {
+        if(selectedRestaurant == null) return;
+        if(!validateNewFoodFields())return;
+
+        Food food = new Food();
+        food.setRestaurant(selectedRestaurant);
+        food.setName(dishNameField.getText());
+        food.setIngredients(selectedIngredientList.getItems());
+        //food.setAllergens("None");
+        food.setPrice(Double.parseDouble(foodPriceField.getText()));
+
+        if(restaurantFoodList.getSelectionModel().getSelectedItem() == null) {
+            // create new food
+            genericHibernate.createEntity(food, "Insert Food", "Nepavyko prideti patiekalo i duomenu baze");
+            renderRestaurantFood();
+            clearFoodInputFields();
+        } else {
+            // update food
+            food.setId(restaurantFoodList.getSelectionModel().getSelectedItem().getId());
+            genericHibernate.updateEntity(food);
+            renderRestaurantFood();
+            clearFoodInputFields();
+        }
+    }
+    @FXML public void addIngredient(ActionEvent actionEvent) {
+        if(selectedRestaurant == null) return;
+        if(availableIngredientsList.getSelectionModel().getSelectedItem() == null) return;
+        selectedIngredientList.getItems().add(availableIngredientsList.getSelectionModel().getSelectedItem());
+    }
+
+    @FXML public void deleteIngredient(ActionEvent actionEvent) {
+        if(selectedRestaurant == null) return;
+        if(selectedIngredientList.getSelectionModel().getSelectedItem() == null) return;
+        selectedIngredientList.getItems().remove(selectedIngredientList.getSelectionModel().getSelectedItem());
+    }
+
+    private boolean validateNewFoodFields(){
+        if(dishNameField.getText().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Please enter a dish name");
+            return false;
+        }
+        if(selectedIngredientList.getItems().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Please select at least 1 ingredient");
+            return false;
+        }
+        if(foodPriceField.getText().isEmpty()) {
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Please enter your food price");
+            return false;
+        }
+
+        try {
+            Double.parseDouble(foodPriceField.getText());
+        } catch(NumberFormatException e){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Price must be a number");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private void renderRestaurantFood(){
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+        restaurantFoodList.getItems().clear();
+        restaurantFoodList.getItems().addAll(customHibernate.getRestaurantFood(selectedRestaurant));
+    }
+
+
+
+    // todo:
+    //user formoje kai paspaudi update neuzpildo siu lauku: driver b-day, driver license id, restaiurant work hrs
 }

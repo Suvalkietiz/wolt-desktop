@@ -29,4 +29,12 @@ public class Food {
         this.allergens = allergens;
         this.price = price;
     }
+
+
+
+
+    @Override
+    public String toString() {
+        return name + "   " + price + "$";
+    }
 }

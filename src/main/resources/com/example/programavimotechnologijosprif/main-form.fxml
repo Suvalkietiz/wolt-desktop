@@ -3,10 +3,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -48,11 +50,31 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                <Tab text="Restaurant management">
+                <Tab onSelectionChanged="#loadRestaurantManagementData" text="Restaurant management">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <Label layoutX="62.0" layoutY="56.0" prefHeight="110.0" prefWidth="455.0" text="Cia bus admino restorano valdymas, t.y. visu food valdymas" />
+                              <ComboBox fx:id="selectRestaurantBox" layoutX="26.0" layoutY="32.0" onAction="#setRestaurant" prefHeight="31.0" prefWidth="162.0" promptText="Select Restaurant" />
+                              <Label layoutX="25.0" layoutY="13.0" prefHeight="18.0" prefWidth="64.0" text="Dishes of:" />
+                              <ListView fx:id="restaurantFoodList" layoutX="25.0" layoutY="69.0" onMouseClicked="#setFood" prefHeight="258.0" prefWidth="249.0" />
+                              <Button layoutX="26.0" layoutY="333.0" mnemonicParsing="false" onAction="#deselectFood" prefHeight="26.0" prefWidth="147.0" text="Deselect" />
+                              <TextField fx:id="dishNameField" layoutX="369.0" layoutY="32.0" prefHeight="28.0" prefWidth="206.0" />
+                              <Label layoutX="284.0" layoutY="31.0" prefHeight="29.0" prefWidth="81.0" text="Dish Name" />
+                              <ListView fx:id="availableIngredientsList" layoutX="369.0" layoutY="65.0" prefHeight="66.0" prefWidth="207.0" />
+                              <Label layoutX="281.0" layoutY="67.0" prefHeight="23.0" prefWidth="72.0" text="Select" />
+                              <Label layoutX="283.0" layoutY="86.0" prefHeight="23.0" prefWidth="81.0" text="Ingredients" />
+                              <Button layoutX="368.0" layoutY="135.0" mnemonicParsing="false" onAction="#addIngredient" prefHeight="26.0" prefWidth="209.0" text="Add Ingredient" />
+                              <ListView fx:id="selectedIngredientList" layoutX="371.0" layoutY="168.0" prefHeight="79.0" prefWidth="205.0" />
+                              <Label layoutX="280.0" layoutY="168.0" prefHeight="36.0" prefWidth="88.0" text="Your Food" />
+                              <Label layoutX="281.0" layoutY="191.0" prefHeight="27.0" prefWidth="62.0" text="Ingredients" />
+                              <Button layoutX="368.0" layoutY="252.0" mnemonicParsing="false" onAction="#deleteIngredient" prefHeight="22.0" prefWidth="219.0" text="Delete Ingredient" />
+                              <Label layoutX="291.0" layoutY="282.0" prefHeight="27.0" prefWidth="62.0" text="Food Price" />
+                              <Label layoutX="475.0" layoutY="281.0" prefHeight="27.0" prefWidth="18.0" text="\$" />
+                              <TextField fx:id="foodPriceField" layoutX="369.0" layoutY="280.0" prefHeight="32.0" prefWidth="101.0" />
+                              <Line endX="579.5" endY="155.5" layoutX="10.0" layoutY="10.0" startX="346.5" startY="155.5" />
+                              <Button layoutX="482.0" layoutY="336.0" mnemonicParsing="false" onAction="#deleteFood" prefHeight="28.0" prefWidth="94.0" text="Delete Food" />
+                              <Button layoutX="369.0" layoutY="336.0" mnemonicParsing="false" onAction="#saveFood" prefHeight="26.0" prefWidth="102.0" text="Save Food" />
+                              <Line endX="580.5" endY="319.5" startX="285.5" startY="319.5" strokeWidth="3.0" />
                            </children></AnchorPane>
                      </content>
                   </Tab>
