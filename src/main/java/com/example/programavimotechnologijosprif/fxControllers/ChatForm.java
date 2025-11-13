@@ -210,7 +210,6 @@ public class ChatForm {
         CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
         List<Message> messages = customHibernate.getChatMessages(chat);
         sender = messages.getFirst().getAutor();
-        System.out.println("Sender message = " + messages.getFirst().getText());
         messagesList.getItems().clear();
         messagesList.getItems().addAll(messages);
     }
@@ -232,9 +231,10 @@ public class ChatForm {
     }
 
     @FXML public void selectChat() {
-        if(chatSelectBox.getSelectionModel().getSelectedItem() != null){
-            renderMessages(chatSelectBox.getSelectionModel().getSelectedItem());
-            renderChatFields(chatSelectBox.getSelectionModel().getSelectedItem());
+        orderChat = chatSelectBox.getValue();
+        if(orderChat != null){
+            renderMessages(orderChat);
+            renderChatFields(orderChat);
         }
 
     }
@@ -267,10 +267,52 @@ public class ChatForm {
     }
 
 
+    @FXML public void deleteMessage() {
+        Message selectedMessage = messagesList.getSelectionModel().getSelectedItem();
+        Chat selectedMessageChat = selectedMessage.getChat();
+        genericHibernate.deleteEntityById(Message.class, selectedMessage.getId());
+
+        if(selectedMessageChat.isEmpty())
+            deleteChat();
+
+        messagesList.getSelectionModel().clearSelection();
+        renderMessages(orderChat);
+    }
+
+    @FXML public void deleteChat() {
+        if(FxUtils.generateConfirmationAlert(Alert.AlertType.INFORMATION, "U sure", "Do you really want to delete this chat?")) {
+            CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+            // get the foreign key off
+            FoodOrder foodOrder = orderChat.getFoodOrder();
+            foodOrder.setChat(null);
+            genericHibernate.updateEntity(foodOrder);
+
+            customHibernate.deleteMessagesByChat(orderChat);
+            genericHibernate.deleteEntityById(Chat.class, orderChat.getId());
+
+            orderChat = null;
+            sender = null;
+            deselectMessage();
+            chatSelectBox.getSelectionModel().clearSelection();
+            clearChatFields();
+            messagesList.getItems().clear();
+            setChatSelectBox(userSelectBox.getSelectionModel().getSelectedItem());
+        }
+    }
+
+    private void clearChatFields(){
+        senderField.clear();
+        receiverField.clear();
+        orderIdField.clear();
+    }
+
+
 }
 
 
 ///  SVARBUUUUUUUU
 // Jeigu adminas istrina visas zinutes, tai chatas irgi issitrina !!!!!!!!!!!!!!!!!!!!!!!!!!!
 // svarbu. jeigu nori istrinti, foodorder reikia nunulinti, kitaip neleidzia.
+
+// pabaik renderChatFields...
 

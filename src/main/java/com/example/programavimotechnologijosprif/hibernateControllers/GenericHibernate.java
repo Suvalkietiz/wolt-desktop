@@ -69,6 +69,7 @@ public class GenericHibernate {
             entityManager.getTransaction().commit();
         } catch (Exception ex){
             // noresiu ismest alert zmogui kad zinotu db operacijos metu buvo klaida
+            ex.printStackTrace();
 
         } finally {
             if(entityManager != null){

@@ -150,6 +150,34 @@ public class CustomHibernate extends GenericHibernate {
     }
 
 
+    public void deleteMessagesByChat(Chat chat) {
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Message> cq = cb.createQuery(Message.class);
+            Root<Message> root = cq.from(Message.class);
+
+            cq.select(root).where(cb.equal(root.get("chat"), chat));
+
+            List<Message> messages = entityManager.createQuery(cq).getResultList();
+            for (Message msg : messages)
+                entityManager.remove(msg);
+            entityManager.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+            if (entityManager != null && entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().rollback();
+            }
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+    }
+
+
 
 
 
