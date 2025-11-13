@@ -1,5 +1,6 @@
 package com.example.programavimotechnologijosprif.hibernateControllers;
 
+import com.example.programavimotechnologijosprif.Utils.FxUtils;
 import com.example.programavimotechnologijosprif.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
@@ -7,6 +8,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Root;
+import javafx.scene.control.Alert;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -121,6 +123,33 @@ public class CustomHibernate extends GenericHibernate {
     public List<FoodOrder> getDriverOrders(Driver driver) {
         return getUserFoodOrders("driver", driver);
     }
+
+
+    public List<Message> getChatMessages(Chat chat) {
+        List<Message> messages = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Message> cq = cb.createQuery(Message.class);
+            Root<Message> root = cq.from(Message.class);
+            System.out.println("Chat id: " + chat.getId());
+            cq.select(root)
+                    .where(cb.equal(root.get("chat").get("id"), chat.getId()))
+                    .orderBy(cb.asc(root.get("timestamp")));
+            Query q = entityManager.createQuery(cq);
+            messages = q.getResultList();
+        }  catch (Exception e){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Db error", "CustomHibernated failed to read Chat MEssages");
+            e.printStackTrace();
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+        return messages;
+    }
+
+
 
 
 

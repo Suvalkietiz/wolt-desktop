@@ -1,19 +1,19 @@
 package com.example.programavimotechnologijosprif.fxControllers;
 
+import com.example.programavimotechnologijosprif.Utils.FxUtils;
 import com.example.programavimotechnologijosprif.hibernateControllers.CustomHibernate;
 import com.example.programavimotechnologijosprif.hibernateControllers.GenericHibernate;
 import com.example.programavimotechnologijosprif.model.*;
 import jakarta.persistence.EntityManagerFactory;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +23,8 @@ public class ChatForm {
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
     private User loggedUser;
+    private Chat orderChat;
+    private User sender;
 
     @FXML public ListView<Message> messagesList;
 
@@ -41,7 +43,6 @@ public class ChatForm {
     @FXML public TextField autorField;
 
     @FXML public HBox autorRow;
-    @FXML public HBox timeSendRow;
 
     public void setData(EntityManagerFactory entityManagerFactory, User loggedUser){
         this.entityManagerFactory = entityManagerFactory;
@@ -49,22 +50,6 @@ public class ChatForm {
         this.loggedUser = loggedUser;
     }
 
-    public void initializeReadUI(){
-        if(loggedUser == null){
-            System.out.println("User is null. Don't know what UI to initialize");
-        } else {
-            // bendras UI
-            sendMessageButton.setVisible(false);
-
-            disableTextFields();
-
-            if(loggedUser.isAdmin()){
-                initializeAdminUI();
-            } else {
-                initializeRestaurantUI();
-            }
-        }
-    }
 
 
 
@@ -97,7 +82,7 @@ public class ChatForm {
     @FXML public void selectUser() {
         User selectedUser = (User) userSelectBox.getSelectionModel().getSelectedItem();
         setChatSelectBox(selectedUser);
-
+        messagesList.getItems().clear();
     }
 
 
@@ -155,8 +140,7 @@ public class ChatForm {
         initializeRestaurantUI();
         disableTextFields();
         messageField.setDisable(false);
-        chatSelectBox.setVisible(false);
-        timeSendRow.setVisible(false);
+        chatSelectBox.setDisable(true);
         autorRow.setVisible(false);
         sendMessageButton.setVisible(true);
 
@@ -164,6 +148,129 @@ public class ChatForm {
         receiverField.setText(String.valueOf(foodOrder.getDriver()));
         orderIdField.setText(String.valueOf(foodOrder.getId()));
 
+        orderChat = foodOrder.getChat();
+        if(orderChat == null){
+            orderChat = new Chat();
+            orderChat.setRestaurant(foodOrder.getRestaurant());
+            orderChat.setDriver(foodOrder.getDriver());
+            orderChat.setFoodOrder(foodOrder);
+        } else renderMessages(orderChat);
+        chatSelectBox.setValue(orderChat);
+
 
     }
+
+    public void initializeReadUI(){
+        if(loggedUser == null){
+            System.out.println("User is null. Don't know what UI to initialize");
+        } else {
+            // bendras UI
+            sendMessageButton.setVisible(false);
+            chatSelectBox.setDisable(false);
+
+            disableTextFields();
+
+            if(loggedUser.isAdmin()){
+                initializeAdminUI();
+            } else {
+                initializeRestaurantUI();
+            }
+        }
+    }
+    //------=========------=========------=========------=========------=========
+    //------=========
+    //------=========------=========------=========------=========------=========
+    @FXML public void sendMessage() {
+        if(orderChat == null){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "OrderChat", "For some reason your orderChat is null");
+            return;
+        }
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+
+        Message message = new Message();
+        message.setText(messageField.getText());
+        message.setAutor(loggedUser);
+        message.setTimestamp(LocalDateTime.now());
+        message.setChat(orderChat);
+
+        orderChat.setMessages(customHibernate.getChatMessages(orderChat));
+        if(orderChat.isEmpty()){
+            //create new chat and link it with foodOrder
+            genericHibernate.createEntity(orderChat, "DB Klaida", "Nepasiseke sukurti nauja chata tavo restoranui..");
+
+            FoodOrder foodOrder = orderChat.getFoodOrder();
+            foodOrder.setChat(orderChat);
+            genericHibernate.updateEntity(foodOrder);
+        }
+        genericHibernate.createEntity(message, "DB klaida", "Nepavyko irasyti zinutes i db");
+        messageField.clear();
+        renderMessages(orderChat);
+    }
+    private void renderMessages(Chat chat){
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+        List<Message> messages = customHibernate.getChatMessages(chat);
+        sender = messages.getFirst().getAutor();
+        System.out.println("Sender message = " + messages.getFirst().getText());
+        messagesList.getItems().clear();
+        messagesList.getItems().addAll(messages);
+    }
+
+    @FXML public void renderMessageFields() {
+        Message selectedMessage = messagesList.getSelectionModel().getSelectedItem();
+        if(selectedMessage != null){
+            timeSendField.setText(String.valueOf(selectedMessage.getTimestamp()));
+            messageField.setText(selectedMessage.getText());
+            autorField.setText(String.valueOf(selectedMessage.getAutor()));
+        }
+    }
+
+    @FXML public void deselectMessage() {
+        messagesList.getSelectionModel().clearSelection();
+        timeSendField.clear();
+        messageField.clear();
+        autorField.clear();
+    }
+
+    @FXML public void selectChat() {
+        if(chatSelectBox.getSelectionModel().getSelectedItem() != null){
+            renderMessages(chatSelectBox.getSelectionModel().getSelectedItem());
+            renderChatFields(chatSelectBox.getSelectionModel().getSelectedItem());
+        }
+
+    }
+
+    private void renderChatFields(Chat chat) {
+        if(chat.getAppUser() == null){
+            // chat between restaurant and driver
+            if(sender == null){
+                System.out.println("WUTURUWDDUWJUDWUJDW");
+                return;
+            }
+            System.out.println("SENDER = " + sender + "\t" + chat.getRestaurant().toString());
+            if(sender.getId() == chat.getRestaurant().getId()){
+                senderField.setText(String.valueOf(chat.getRestaurant()));
+                receiverField.setText(String.valueOf(chat.getDriver()));
+            } else {
+                senderField.setText(String.valueOf(chat.getDriver()));
+                receiverField.setText(String.valueOf(chat.getRestaurant()));
+            }
+        } else if(chat.getDriver() == null){
+            // chat between restaurant and appUser
+            //...
+        } else if(chat.getRestaurant() == null){
+            // chat between appUser and driver
+            //...
+        }
+        orderIdField.setText(String.valueOf(chat.getFoodOrder().getId()));
+
+
+    }
+
+
 }
+
+
+///  SVARBUUUUUUUU
+// Jeigu adminas istrina visas zinutes, tai chatas irgi issitrina !!!!!!!!!!!!!!!!!!!!!!!!!!!
+// svarbu. jeigu nori istrinti, foodorder reikia nunulinti, kitaip neleidzia.
+

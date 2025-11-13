@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 public class Chat {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private int id;
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY) private List<Message> messages;
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.LAZY) @OrderBy("timestamp ASC") private List<Message> messages;
     @ManyToOne private AppUser appUser;
     @ManyToOne private Driver driver;
     @ManyToOne private Restaurant restaurant;
@@ -28,8 +28,13 @@ public class Chat {
         // default message??
     }
 
+    public boolean isEmpty(){
+        if(messages.isEmpty())return true;
+        else return false;
+    }
+
     @Override
     public String toString() {
-        return foodOrder.getTimeCreated().toString();
+        return driver.toString();
     }
 }

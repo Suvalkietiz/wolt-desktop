@@ -14,9 +14,9 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.ChatForm">
    <children>
       <ComboBox fx:id="userSelectBox" layoutX="14.0" layoutY="14.0" onAction="#selectUser" prefHeight="26.0" prefWidth="126.0" promptText="- Select User -" />
-      <ComboBox fx:id="chatSelectBox" layoutX="174.0" layoutY="14.0" prefHeight="26.0" prefWidth="141.0" promptText="- Select Chat -" />
+      <ComboBox fx:id="chatSelectBox" layoutX="174.0" layoutY="14.0" onAction="#selectChat" prefHeight="26.0" prefWidth="141.0" promptText="- Select Chat -" />
       <Button fx:id="deleteChatButton" layoutX="349.0" layoutY="129.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="105.0" text="Delete Chat" />
-      <ListView fx:id="messagesList" layoutX="14.0" layoutY="51.0" prefHeight="341.0" prefWidth="301.0" />
+      <ListView fx:id="messagesList" layoutX="14.0" layoutY="51.0" onMouseClicked="#renderMessageFields" prefHeight="310.0" prefWidth="301.0" />
       <VBox layoutX="330.0" layoutY="14.0" prefHeight="107.0" prefWidth="256.0">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
@@ -61,7 +61,7 @@
       <Button fx:id="deleteMessageButton" layoutX="349.0" layoutY="360.0" mnemonicParsing="false" text="Delete Message" />
       <VBox layoutX="330.0" layoutY="180.0" prefHeight="162.0" prefWidth="256.0">
          <children>
-            <HBox fx:id="timeSendRow" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label text="Time Send" />
                   <TextField fx:id="timeSendField" />
@@ -99,6 +99,7 @@
             </HBox>
          </children>
       </VBox>
-      <Button fx:id="sendMessageButton" layoutX="491.0" layoutY="361.0" mnemonicParsing="false" text="Send Message" />
+      <Button fx:id="sendMessageButton" layoutX="491.0" layoutY="361.0" mnemonicParsing="false" onAction="#sendMessage" text="Send Message" />
+      <Button layoutX="14.0" layoutY="362.0" mnemonicParsing="false" onAction="#deselectMessage" prefHeight="26.0" prefWidth="117.0" text="Deselect" />
    </children>
 </AnchorPane>
