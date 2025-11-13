@@ -27,4 +27,9 @@ public class Chat {
         this.messages = new ArrayList<>();
         // default message??
     }
+
+    @Override
+    public String toString() {
+        return foodOrder.getTimeCreated().toString();
+    }
 }

@@ -65,10 +65,12 @@ public class MainForm implements Initializable {
     @FXML public TextField orderCompletedField;
     @FXML public ListView<Food> orderItemsList;
     @FXML public ListView<FoodOrder> userOrderList;
+    @FXML public Button writeChatButton;
     //</editor-fold>
 
     @FXML public TabPane managementTabPane;
     @FXML public AnchorPane adminUserManagement;
+
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
@@ -114,6 +116,7 @@ public class MainForm implements Initializable {
                 System.out.println("User is Admin");
                 selectionModel.select(0);
                 adminUserManagement.setVisible(true);
+                writeChatButton.setVisible(false);
             } else if(loggedUser instanceof Restaurant) {
                 System.out.println("User is Restaurant");
                 selectionModel.select(1);
@@ -128,6 +131,7 @@ public class MainForm implements Initializable {
                 orderUser = loggedUser;
                 selectUserBox.setDisable(true);
                 selectUserBox.setValue(loggedUser);
+                writeChatButton.setVisible(true);
             } else {
                 System.out.println("Unkown User Type");
                 FxUtils.generateAlert(Alert.AlertType.ERROR, "Get lost", "Logged in user is neither 'Admin' nor 'Restaurant'.");
@@ -568,4 +572,39 @@ public class MainForm implements Initializable {
         orderItemsList.getItems().addAll(selectedFoodOrder.getItems());
     }
 
+
+    @FXML public void openChatRead(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("chat-form.fxml"));
+
+        Parent parent = fxmlLoader.load();
+        ChatForm chatForm = (ChatForm) fxmlLoader.getController();
+        chatForm.setData(entityManagerFactory, loggedUser);
+        chatForm.initializeReadUI();
+
+        Scene scene = new Scene(parent);
+        Stage stage = (Stage) new Stage();
+        stage.setTitle("Chats");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML public void openWriteChat(ActionEvent actionEvent) throws IOException {
+        FoodOrder selectedFoodOrder = userOrderList.getSelectionModel().getSelectedItem();
+        if(selectedFoodOrder == null){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Koks orderis?", "Pasirink orderi jeigu nori rasyti zinute");
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("chat-form.fxml"));
+
+            Parent parent = fxmlLoader.load();
+            ChatForm chatForm = (ChatForm) fxmlLoader.getController();
+            chatForm.setData(entityManagerFactory, loggedUser);
+            chatForm.initializeWriteUI(selectedFoodOrder);
+
+            Scene scene = new Scene(parent);
+            Stage stage = (Stage) new Stage();
+            stage.setTitle("Chats");
+            stage.setScene(scene);
+            stage.show();
+        }
+    }
 }

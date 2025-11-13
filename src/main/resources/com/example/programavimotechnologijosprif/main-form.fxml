@@ -138,9 +138,18 @@
                                  </children>
                               </VBox>
                               <Button layoutX="23.0" layoutY="341.0" mnemonicParsing="false" onAction="#createOrder" prefHeight="26.0" prefWidth="123.0" text="Create New Order" />
-                              <Button layoutX="182.0" layoutY="342.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="26.0" prefWidth="91.0" text="Delete Order" />
+                              <Button layoutX="157.0" layoutY="341.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="26.0" prefWidth="91.0" text="Delete Order" />
+                              <Button fx:id="writeChatButton" layoutX="260.0" layoutY="341.0" mnemonicParsing="false" onAction="#openWriteChat" text="Chat" />
                            </children></AnchorPane>
                      </content>
+                  </Tab>
+                  <Tab>
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                     <graphic>
+                        <Button mnemonicParsing="false" onAction="#openChatRead" text="All Chats" />
+                     </graphic>
                   </Tab>
               </tabs>
             </TabPane>

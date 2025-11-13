@@ -20,7 +20,7 @@ public class FoodOrder {
     @ManyToOne private Restaurant restaurant;
     @ManyToMany private List<Food> items;
     private double price;
-    @OneToOne private Chat chat; // kai bus keli atskiri chatai, tuomet turesi mapinti. kolkas nereikia.
+    @OneToOne private Chat chat;
     private LocalDateTime timeCreated;
     private LocalDateTime timeCompleted;
     @Enumerated private Status status;

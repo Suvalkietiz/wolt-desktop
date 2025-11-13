@@ -12,6 +12,7 @@ module com.example.programavimotechnologijosprif {
     requires org.kordamp.bootstrapfx.core;
     requires static lombok;
     requires javafx.graphics;
+    requires javafx.base;
     //requires javafx.graphics;
 
     opens com.example.programavimotechnologijosprif to javafx.fxml;
