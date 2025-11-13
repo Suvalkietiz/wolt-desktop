@@ -607,4 +607,19 @@ public class MainForm implements Initializable {
             stage.show();
         }
     }
+
+    @FXML public void openReviews() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("chat-form.fxml"));
+
+        Parent parent = fxmlLoader.load();
+        ChatForm chatForm = (ChatForm) fxmlLoader.getController();
+        chatForm.setData(entityManagerFactory, loggedUser);
+        chatForm.initializeReviewUI(loggedUser);
+
+        Scene scene = new Scene(parent);
+        Stage stage = (Stage) new Stage();
+        stage.setTitle("Reviews");
+        stage.setScene(scene);
+        stage.show();
+    }
 }

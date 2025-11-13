@@ -91,6 +91,25 @@ public class ChatForm {
     //==============================================================================
     //$$$$$$$$$$$$$$$$$$$$$$$$$ UI INITILIZATION $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //==============================================================================
+    // is reviews tik tiek ir parasiau, trys metodai daugiau nieko.
+    // jei pasikursi pamatysi kad review beveik tas pats kas chatas dabar
+    // truksta tik poros eiluciu nes vos vos skiriasi.
+    public void initializeReviewUI(User currentUser){
+        loggedUser = currentUser;
+        if(loggedUser.isAdmin()){
+            initializeReviewAdminUI();
+        } else {
+            initializeReviewRestaurantUI();
+        }
+    }
+
+
+    private void initializeReviewRestaurantUI(){
+        initializeRestaurantUI();
+    }
+    private void initializeReviewAdminUI(){
+        initializeAdminUI();
+    }
 
     private void initializeRestaurantUI(){
         userSelectBox.setVisible(false);
