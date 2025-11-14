@@ -77,7 +77,6 @@
                               <Button layoutX="482.0" layoutY="336.0" mnemonicParsing="false" onAction="#deleteFood" prefHeight="28.0" prefWidth="94.0" text="Delete Food" />
                               <Button layoutX="369.0" layoutY="336.0" mnemonicParsing="false" onAction="#saveFood" prefHeight="26.0" prefWidth="102.0" text="Save Food" />
                               <Line endX="580.5" endY="319.5" startX="285.5" startY="319.5" strokeWidth="3.0" />
-                              <Button layoutX="236.0" layoutY="334.0" mnemonicParsing="false" text="My Reviews" />
                            </children></AnchorPane>
                      </content>
                   </Tab>

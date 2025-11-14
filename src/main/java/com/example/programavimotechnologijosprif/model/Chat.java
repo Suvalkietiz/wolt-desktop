@@ -1,5 +1,6 @@
 package com.example.programavimotechnologijosprif.model;
 
+import com.example.programavimotechnologijosprif.hibernateControllers.CustomHibernate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,13 +29,19 @@ public class Chat {
         // default message??
     }
 
-    public boolean isEmpty(){
+    public boolean isEmpty(EntityManagerFactory entityManagerFactory){
+        updateMessages(entityManagerFactory);
         if(messages.isEmpty())return true;
-        else return false;
+        return false;
+    }
+
+    private void updateMessages(EntityManagerFactory entityManagerFactory){
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+        messages = customHibernate.getChatMessages(this);
     }
 
     @Override
     public String toString() {
-        return driver.toString();
+        return foodOrder.toString();
     }
 }

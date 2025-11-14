@@ -16,8 +16,9 @@ import lombok.Setter;
 @Entity
 public class Review extends Message {
     private int rate;
-    //@OneToOne private FoodOrder foodOrder;
+    @ManyToOne private FoodOrder foodOrder;
     @ManyToOne private Restaurant restaurant;
+    @ManyToOne private Driver driver;
 
     public Review(String text, int rate) {
         super(text);

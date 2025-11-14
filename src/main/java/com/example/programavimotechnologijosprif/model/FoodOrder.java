@@ -24,6 +24,7 @@ public class FoodOrder {
     private LocalDateTime timeCreated;
     private LocalDateTime timeCompleted;
     @Enumerated private Status status;
+    @OneToMany(mappedBy = "foodOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY) private List<Review> reviews;
 
     public FoodOrder(List<Food> items) {
         this.items = items;

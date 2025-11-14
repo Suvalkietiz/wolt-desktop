@@ -19,7 +19,7 @@
       <ListView fx:id="messagesList" layoutX="14.0" layoutY="51.0" onMouseClicked="#renderMessageFields" prefHeight="310.0" prefWidth="301.0" />
       <VBox layoutX="330.0" layoutY="14.0" prefHeight="107.0" prefWidth="256.0">
          <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+            <HBox fx:id="senderRow" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="46.0" text="Sender" />
                   <TextField fx:id="senderField" />
@@ -93,6 +93,15 @@
                <VBox.margin>
                   <Insets />
                </VBox.margin>
+               <padding>
+                  <Insets right="5.0" />
+               </padding>
+            </HBox>
+            <HBox fx:id="rateRow" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="61.0" text="Rate" />
+                  <TextField fx:id="rateField" />
+               </children>
                <padding>
                   <Insets right="5.0" />
                </padding>

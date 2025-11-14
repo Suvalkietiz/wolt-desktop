@@ -35,7 +35,8 @@ public class CustomHibernate extends GenericHibernate {
             Query q = entityManager.createQuery(cq);
             user = (User)q.getSingleResult();
         } catch (Exception e){
-            // pagalvopsim ka daryt
+            // pagalvopsim ka dary
+            e.printStackTrace();
         } finally {
             if(entityManager != null){
                 entityManager.close();
@@ -60,6 +61,7 @@ public class CustomHibernate extends GenericHibernate {
             food = q.getResultList();
         } catch (Exception e){
             // pagalvopsim ka daryt
+            e.printStackTrace();
         } finally {
             if(entityManager != null){
                 entityManager.close();
@@ -175,6 +177,59 @@ public class CustomHibernate extends GenericHibernate {
                 entityManager.close();
             }
         }
+    }
+
+
+
+
+
+    private List<Review> getUserReviews(String attributeNameInReview, Object userEntity) {
+        List<Review> reviews = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Review> cq = cb.createQuery(Review.class);
+            Root<Review> root = cq.from(Review.class); // cia yra baze nuo kurios lipdau uzkluasa
+
+            cq.select(root).where(
+                    cb.equal(root.get(attributeNameInReview), userEntity)
+            );
+            reviews = entityManager.createQuery(cq).getResultList();
+
+            //chatgpt for looP:
+            // ✅ FORCE LOAD lazy relationships BEFORE closing EM
+            for (Review review : reviews) {
+
+                // These are safe and trigger the lazy loads:
+                if (review.getRestaurant() != null)
+                    review.getRestaurant().getId();
+
+                if (review.getDriver() != null)
+                    review.getDriver().getId();
+
+//                if (review.getAppUser() != null)
+//                    review.getAppUser().getId();
+
+                // Trigger load of the items collection
+                //review.getItems().size();
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+        return reviews;
+    }
+
+    public List<Review> getRestaurantReviews(Restaurant restaurant) {
+        return getUserReviews("restaurant", restaurant);
+    }
+
+    public List<Review> getDriverReviews(Driver driver) {
+        return getUserReviews("driver", driver);
     }
 
 

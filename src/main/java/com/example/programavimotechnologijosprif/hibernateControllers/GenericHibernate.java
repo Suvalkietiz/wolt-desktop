@@ -38,6 +38,7 @@ public class GenericHibernate {
             // noresiu ismest alert zmogui kad zinotu db operacijos metu buvo klaida
             //FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Oh no", "DB error", "Something went wrong with createEntity");
             FxUtils.generateHeaderAlert(Alert.AlertType.ERROR, "DataBase Error", header, alertMessage);
+            ex.printStackTrace();
         } finally {
             if(entityManager != null){
                 entityManager.close();
@@ -54,6 +55,7 @@ public class GenericHibernate {
         } catch (Exception ex){
             // noresiu ismest alert zmogui kad zinotu db operacijos metu buvo klaida
             FxUtils.generateExcetionAlert(ex);
+            ex.printStackTrace();
         } finally {
             if(entityManager != null){
                 entityManager.close();
@@ -87,7 +89,7 @@ public class GenericHibernate {
             entityManager.getTransaction().commit();
         } catch (Exception ex){
             // noresiu ismest alert zmogui kad zinotu db operacijos metu buvo klaida
-
+            ex.printStackTrace();
         } finally {
             if(entityManager != null){
                 entityManager.close();

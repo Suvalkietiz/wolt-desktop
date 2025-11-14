@@ -16,6 +16,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -41,8 +42,11 @@ public class ChatForm {
     @FXML public TextField timeSendField;
     @FXML public TextField messageField;
     @FXML public TextField autorField;
+    @FXML public TextField rateField;
 
     @FXML public HBox autorRow;
+    @FXML public HBox rateRow;
+    @FXML public HBox senderRow;
 
     public void setData(EntityManagerFactory entityManagerFactory, User loggedUser){
         this.entityManagerFactory = entityManagerFactory;
@@ -72,8 +76,25 @@ public class ChatForm {
         if(allOrders == null){
             return allUserChats;
         }
-        for(FoodOrder foodOrder : allOrders)
-            if(foodOrder.getChat() != null)allUserChats.add(foodOrder.getChat());
+
+        for (FoodOrder foodOrder : allOrders) {
+            Chat chat = foodOrder.getChat();
+            if (chat == null) continue;
+
+            User driver = chat.getDriver();
+            User restaurant = chat.getRestaurant();
+            User appUser = chat.getAppUser();
+            if(user instanceof AppUser) {
+                if (appUser != null) allUserChats.add(chat);
+            } else if(user instanceof Driver) {
+                if (driver != null) allUserChats.add(chat);
+            } else if(user instanceof Restaurant){
+                if(restaurant != null)allUserChats.add(chat);
+            }
+
+        }
+
+
         return allUserChats;
     }
 
@@ -83,6 +104,19 @@ public class ChatForm {
         User selectedUser = (User) userSelectBox.getSelectionModel().getSelectedItem();
         setChatSelectBox(selectedUser);
         messagesList.getItems().clear();
+        clearChatFields();
+        deselectMessage();
+
+        if(isReviewMode()){
+            renderReviews(selectedUser);
+        }
+    }
+
+    private boolean isReviewMode(){
+        if(rateRow.isVisible()){
+            return true;
+        }
+        return false;
     }
 
 
@@ -91,9 +125,6 @@ public class ChatForm {
     //==============================================================================
     //$$$$$$$$$$$$$$$$$$$$$$$$$ UI INITILIZATION $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //==============================================================================
-    // is reviews tik tiek ir parasiau, trys metodai daugiau nieko.
-    // jei pasikursi pamatysi kad review beveik tas pats kas chatas dabar
-    // truksta tik poros eiluciu nes vos vos skiriasi.
     public void initializeReviewUI(User currentUser){
         loggedUser = currentUser;
         if(loggedUser.isAdmin()){
@@ -101,20 +132,79 @@ public class ChatForm {
         } else {
             initializeReviewRestaurantUI();
         }
+        // bendras ui
+        disableTextFields();
+        chatSelectBox.setVisible(false);
+        sendMessageButton.setVisible(false);
+        senderRow.setVisible(false);
+        rateRow.setVisible(true);
     }
+
+    private void generateReview(){
+        // pls kviesk tik ten kur restoranas jungiasi
+        Review review = new Review();
+        review.setTimestamp(LocalDateTime.now());
+        review.setText("Isbandau review");
+        review.setAutor(genericHibernate.getEntityById(User.class, 22));
+        review.setRestaurant((Restaurant) loggedUser);
+        review.setRate(7);
+        review.setFoodOrder(genericHibernate.getEntityById(FoodOrder.class, 1));
+        genericHibernate.createEntity(review, "Review failed", "Review generator failed");
+    }
+
+
 
 
     private void initializeReviewRestaurantUI(){
+        //generateReview();
         initializeRestaurantUI();
+        renderReviews(loggedUser);
     }
     private void initializeReviewAdminUI(){
         initializeAdminUI();
+        deleteChatButton.setVisible(false);
+        deleteMessageButton.setText("Delete Review");
     }
 
+    private void renderReviews(User user){
+        List<Review> reviews = null;
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+        if(user instanceof Restaurant){
+            reviews = customHibernate.getRestaurantReviews((Restaurant) user);
+        } else if(user instanceof Driver){
+           reviews = customHibernate.getDriverReviews((Driver) user);
+        } else {
+            // not sure if appUser and admin will ever have reviews
+            reviews = new ArrayList<>();
+        }
+        messagesList.getItems().clear();
+        messagesList.getItems().addAll(reviews);
+    }
+
+    private void renderReviewFields(Review review){
+        if(review.getRestaurant() != null){
+            receiverField.setText(String.valueOf(review.getRestaurant()));
+        } else if(review.getDriver() != null){
+            receiverField.setText(String.valueOf(review.getDriver()));
+        }
+        orderIdField.setText(String.valueOf(review.getFoodOrder()));
+    }
+
+
+
+
+
+
     private void initializeRestaurantUI(){
+        generateReview();
+        generateReview();
+        generateReview();
+        generateReview();
+
         userSelectBox.setVisible(false);
         deleteChatButton.setVisible(false);
         deleteMessageButton.setVisible(false);
+        rateRow.setVisible(false);
         setChatSelectBox(loggedUser);
     }
 
@@ -122,6 +212,7 @@ public class ChatForm {
         userSelectBox.setVisible(true);
         deleteChatButton.setVisible(true);
         deleteMessageButton.setVisible(true);
+        rateRow.setVisible(false);
         setUserSelectBox();
     }
 
@@ -152,6 +243,7 @@ public class ChatForm {
         timeSendField.setDisable(true);
         messageField.setDisable(true);
         autorField.setDisable(true);
+        rateField.setDisable(true);
     }
 
 
@@ -213,7 +305,7 @@ public class ChatForm {
         message.setChat(orderChat);
 
         orderChat.setMessages(customHibernate.getChatMessages(orderChat));
-        if(orderChat.isEmpty()){
+        if(orderChat.isEmpty(entityManagerFactory)){
             //create new chat and link it with foodOrder
             genericHibernate.createEntity(orderChat, "DB Klaida", "Nepasiseke sukurti nauja chata tavo restoranui..");
 
@@ -240,6 +332,10 @@ public class ChatForm {
             messageField.setText(selectedMessage.getText());
             autorField.setText(String.valueOf(selectedMessage.getAutor()));
         }
+        if(selectedMessage instanceof Review){
+            rateField.setText(String.valueOf(((Review) selectedMessage).getRate()));
+            renderReviewFields((Review)selectedMessage);
+        }
     }
 
     @FXML public void deselectMessage() {
@@ -247,9 +343,14 @@ public class ChatForm {
         timeSendField.clear();
         messageField.clear();
         autorField.clear();
+        if(isReviewMode()){
+            rateField.clear();
+            orderIdField.clear();
+        }
     }
 
     @FXML public void selectChat() {
+        deselectMessage();
         orderChat = chatSelectBox.getValue();
         if(orderChat != null){
             renderMessages(orderChat);
@@ -291,11 +392,15 @@ public class ChatForm {
         Chat selectedMessageChat = selectedMessage.getChat();
         genericHibernate.deleteEntityById(Message.class, selectedMessage.getId());
 
-        if(selectedMessageChat.isEmpty())
-            deleteChat();
+        if(isReviewMode()){
+            renderReviews(userSelectBox.getValue());
 
-        messagesList.getSelectionModel().clearSelection();
-        renderMessages(orderChat);
+        } else {
+            if (selectedMessageChat.isEmpty(entityManagerFactory))
+                deleteChat();
+            renderMessages(orderChat);
+        }
+        deselectMessage();
     }
 
     @FXML public void deleteChat() {
@@ -328,10 +433,5 @@ public class ChatForm {
 
 }
 
-
-///  SVARBUUUUUUUU
-// Jeigu adminas istrina visas zinutes, tai chatas irgi issitrina !!!!!!!!!!!!!!!!!!!!!!!!!!!
-// svarbu. jeigu nori istrinti, foodorder reikia nunulinti, kitaip neleidzia.
-
-// pabaik renderChatFields...
-
+// truksta delete mygtuko pas admina
+// padaryk vbox instead of list?
