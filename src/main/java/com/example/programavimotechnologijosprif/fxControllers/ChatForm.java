@@ -196,11 +196,6 @@ public class ChatForm {
 
 
     private void initializeRestaurantUI(){
-        generateReview();
-        generateReview();
-        generateReview();
-        generateReview();
-
         userSelectBox.setVisible(false);
         deleteChatButton.setVisible(false);
         deleteMessageButton.setVisible(false);
