@@ -1,6 +1,7 @@
 package com.example.programavimotechnologijosprif.fxControllers;
 
 import com.example.programavimotechnologijosprif.HelloApplication;
+import com.example.programavimotechnologijosprif.Utils.DateValidation;
 import com.example.programavimotechnologijosprif.Utils.FxUtils;
 import com.example.programavimotechnologijosprif.hibernateControllers.CustomHibernate;
 import com.example.programavimotechnologijosprif.hibernateControllers.GenericHibernate;
@@ -19,6 +20,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -28,6 +30,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class MainForm implements Initializable {
 
@@ -66,6 +69,12 @@ public class MainForm implements Initializable {
     @FXML public ListView<Food> orderItemsList;
     @FXML public ListView<FoodOrder> userOrderList;
     @FXML public Button writeChatButton;
+    @FXML public TextField orderStatusField;
+    @FXML public ComboBox<Status> selectStatusBox;
+    @FXML public TextField selectFromField;
+    @FXML public TextField selectToField;
+    @FXML public Button statusUpdateButton;
+    @FXML public HBox statusUpdateHBox;
     //</editor-fold>
 
     @FXML public TabPane managementTabPane;
@@ -486,6 +495,7 @@ public class MainForm implements Initializable {
         orderCreatedOnField.clear();
         orderCompletedField.clear();
         orderItemsList.getItems().clear();
+        orderStatusField.clear();
     }
     private void disableOrderFields() {
         clearOrderFields();
@@ -496,11 +506,16 @@ public class MainForm implements Initializable {
         orderCreatedOnField.setDisable(true);
         orderCompletedField.setDisable(true);
         orderItemsList.setDisable(true);
+        orderStatusField.setDisable(true);
     }
     @FXML public void loadOrderData(Event event) {
         selectUserBox.getItems().clear();
         selectUserBox.getItems().addAll(genericHibernate.getAllRecords(User.class));
         disableOrderFields();
+
+        selectStatusBox.getItems().clear();
+        selectStatusBox.getItems().addAll(Status.values());
+        // ??
 
         userOrderList.getItems().clear();
         fillUserOrders();
@@ -516,13 +531,52 @@ public class MainForm implements Initializable {
         CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
         userOrderList.getItems().clear();
 
+        List<FoodOrder> userOrders;
         if(orderUser instanceof Restaurant){
-            userOrderList.getItems().addAll(customHibernate.getRestaurantOrders((Restaurant) orderUser));
+            userOrders = customHibernate.getRestaurantOrders((Restaurant) orderUser);
+            //userOrderList.getItems().addAll(customHibernate.getRestaurantOrders((Restaurant) orderUser));
         } else if(orderUser instanceof Driver){
-            userOrderList.getItems().addAll(customHibernate.getDriverOrders((Driver) orderUser));
+            userOrders = customHibernate.getDriverOrders((Driver) orderUser);
+            //userOrderList.getItems().addAll(customHibernate.getDriverOrders((Driver) orderUser));
         } else if (orderUser instanceof AppUser) {
-            userOrderList.getItems().addAll(customHibernate.getAppUserOrders((AppUser) orderUser));
+            userOrders = customHibernate.getAppUserOrders((AppUser) orderUser);
+            //userOrderList.getItems().addAll(customHibernate.getAppUserOrders((AppUser) orderUser));
+        } else userOrders = new ArrayList<>();
+
+
+        // apply status filter
+        if(selectStatusBox.getSelectionModel().getSelectedItem() != null){
+            var selectedStatus = selectStatusBox.getSelectionModel().getSelectedItem();
+            userOrders = userOrders.stream()
+                    .filter(c-> selectedStatus.equals(c.getStatus()))
+                    .toList();
         }
+
+        // apply from filter
+        if(!selectFromField.getText().isEmpty()){
+            DateValidation dateValidation = new DateValidation();
+            if(dateValidation.isValid(selectFromField.getText())){
+                System.out.println("Valid date");
+                LocalDate fromDate = LocalDate.parse(selectFromField.getText());
+                userOrders = userOrders.stream()
+                        .filter(c->c.getTimeCreated().isAfter(fromDate.atStartOfDay()))
+                        .collect(Collectors.toList());
+            } else FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid date format. Please enter a valid date, format = " + dateValidation.getDateFormat());
+        }
+        // apply to filter
+        if(!selectToField.getText().isEmpty()){
+            DateValidation dateValidation = new DateValidation();
+            if(dateValidation.isValid(selectToField.getText())){
+                LocalDate toDate = LocalDate.parse(selectToField.getText());
+                userOrders = userOrders.stream()
+                        .filter(c->c.getTimeCreated().isBefore(toDate.atStartOfDay()))
+                        .collect(Collectors.toList());
+            } else FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid date format. Please enter a valid date, format = " + dateValidation.getDateFormat());
+        }
+
+
+        userOrderList.getItems().addAll(userOrders);
+
     }
 
     @FXML public void createOrder(ActionEvent actionEvent) throws IOException {
@@ -570,6 +624,11 @@ public class MainForm implements Initializable {
         if(selectedFoodOrder.getStatus().equals(Status.COMPLETED))
             orderCompletedField.setText(selectedFoodOrder.getTimeCompleted().toString());
         orderItemsList.getItems().addAll(selectedFoodOrder.getItems());
+        orderStatusField.setText(selectedFoodOrder.getStatus().toString());
+    }
+
+    @FXML public void updateStatus(ActionEvent actionEvent) {
+        System.out.println("your status will be updated");
     }
 
 
@@ -622,4 +681,5 @@ public class MainForm implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
+
 }

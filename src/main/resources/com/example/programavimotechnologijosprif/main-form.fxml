@@ -14,13 +14,12 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.MainForm">
+<AnchorPane prefHeight="583.0" prefWidth="607.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.MainForm">
    <children>
       <StackPane layoutX="-7.0" layoutY="-8.0" prefHeight="400.0" prefWidth="607.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TabPane fx:id="managementTabPane" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane fx:id="managementTabPane" prefHeight="598.0" prefWidth="799.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab fx:id="userManagementTab" onSelectionChanged="#reloadTableData" text="User management">
                      <content>
@@ -84,15 +83,17 @@
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <Label layoutX="10.0" layoutY="7.0" prefHeight="10.0" prefWidth="250.0" text="Nononono, nobody updates  an order ;)">
-                                 <font>
-                                    <Font size="8.0" />
-                                 </font>
-                              </Label>
                               <ComboBox fx:id="selectUserBox" layoutX="24.0" layoutY="29.0" onAction="#setUserOrders" prefHeight="28.0" prefWidth="156.0" promptText="- Select User -" />
-                              <ListView fx:id="userOrderList" layoutX="25.0" layoutY="72.0" onMouseClicked="#fillOrderItems" prefHeight="261.0" prefWidth="248.0" />
+                              <ComboBox fx:id="selectStatusBox" layoutX="24.0" layoutY="69.0" onAction="#setUserOrders" prefHeight="28.0" prefWidth="156.0" promptText="- Select Status -" />
+                              <ListView fx:id="userOrderList" layoutX="26.0" layoutY="218.0" onMouseClicked="#fillOrderItems" prefHeight="261.0" prefWidth="248.0" />
                               <VBox layoutX="277.0" layoutY="28.0" prefHeight="328.0" prefWidth="314.0">
                                  <children>
+                                    <HBox prefHeight="45.0" prefWidth="314.0" spacing="40.0">
+                                       <children>
+                                          <Label prefHeight="17.0" prefWidth="40.0" text="Status" />
+                                          <TextField fx:id="orderStatusField" prefHeight="30.0" prefWidth="228.0" />
+                                       </children>
+                                    </HBox>
                                     <HBox prefHeight="45.0" prefWidth="314.0" spacing="50.0">
                                        <children>
                                           <Label text="Client" />
@@ -135,11 +136,20 @@
                                           <ListView fx:id="orderItemsList" prefHeight="94.0" prefWidth="227.0" />
                                        </children>
                                     </HBox>
+                                    <HBox fx:id="statusUpdateHBox" prefHeight="45.0" prefWidth="314.0">
+                                       <children>
+                                          <Label prefHeight="17.0" prefWidth="89.0" text="Status Update" />
+                                          <Button fx:id="statusUpdateButton" mnemonicParsing="false" onAction="#updateStatus" text="Text" />
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
-                              <Button layoutX="23.0" layoutY="341.0" mnemonicParsing="false" onAction="#createOrder" prefHeight="26.0" prefWidth="123.0" text="Create New Order" />
-                              <Button layoutX="157.0" layoutY="341.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="26.0" prefWidth="91.0" text="Delete Order" />
-                              <Button fx:id="writeChatButton" layoutX="260.0" layoutY="341.0" mnemonicParsing="false" onAction="#openWriteChat" text="Chat" />
+                              <Button layoutX="24.0" layoutY="487.0" mnemonicParsing="false" onAction="#createOrder" prefHeight="26.0" prefWidth="123.0" text="Create New Order" />
+                              <Button layoutX="158.0" layoutY="487.0" mnemonicParsing="false" onAction="#deleteOrder" prefHeight="26.0" prefWidth="91.0" text="Delete Order" />
+                              <Button fx:id="writeChatButton" layoutX="25.0" layoutY="526.0" mnemonicParsing="false" onAction="#openWriteChat" text="Chat" />
+                              <TextField fx:id="selectFromField" layoutX="26.0" layoutY="109.0" promptText="- Select From -" />
+                              <TextField fx:id="selectToField" layoutX="26.0" layoutY="148.0" promptText="- Select To -" />
+                              <Button layoutX="26.0" layoutY="180.0" mnemonicParsing="false" onAction="#setUserOrders" text="Apply Date Filter" />
                            </children></AnchorPane>
                      </content>
                   </Tab>
