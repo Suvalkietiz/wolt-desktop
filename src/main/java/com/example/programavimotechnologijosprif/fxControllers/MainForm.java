@@ -47,6 +47,9 @@ public class MainForm implements Initializable {
     @FXML public TableColumn<UserTableParamaters, String> addressCol;
     @FXML public TableColumn<UserTableParamaters, String> createdOnCol;
     @FXML public ComboBox<String> userTypeFilterBox;
+    @FXML public TextField userFilterLoginField;
+    @FXML public TextField userFilterFNameField;
+    @FXML public TextField userFilterDateField;
     //</editor-fold>
 
     //<editor-fold desc="Restaurant Management Tab elements">
@@ -195,7 +198,35 @@ public class MainForm implements Initializable {
         ObservableList<UserTableParamaters> data = FXCollections.observableArrayList();
         if(userManagementTab.isSelected()){
             userTable.getItems().clear();
-            List<User> users = genericHibernate.getAllRecords(User.class); // find why generichibernate could be null
+            List<User> users = genericHibernate.getAllRecords(User.class);
+            // apply text field filters
+            if(!userFilterLoginField.getText().isEmpty() || !userFilterFNameField.getText().isEmpty() || !userFilterDateField.getText().isEmpty()){
+                // apply some filters
+                if(!userFilterLoginField.getText().isEmpty()){
+                    CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+                    List<User> filteredLoginUsers = customHibernate.getUserBySimilarLogin(userFilterLoginField.getText());
+                    users.retainAll(filteredLoginUsers);
+                }
+                if(!userFilterFNameField.getText().isEmpty()){
+                    if(!userFilterFNameField.getText().contains(" ")){
+                        System.out.println("turi ivesti du zodzius");
+                        FxUtils.generateAlert(Alert.AlertType.ERROR, "Missing Full Name", "For full name i need name and surname");
+                        return;
+                    }
+                    CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+                    List<User> filteredFNameUsers = customHibernate.getUserBySimilarFullName(userFilterFNameField.getText());
+                    users.retainAll(filteredFNameUsers);
+                }
+                if(!userFilterDateField.getText().isEmpty()){
+                    DateValidation dateValidation = new DateValidation();
+                    if(dateValidation.isValid(userFilterDateField.getText())) {
+                        users = users.stream()
+                                .filter(c -> c.getDateCreated().isEqual(LocalDate.parse(userFilterDateField.getText())))
+                                .collect(Collectors.toList());
+                    } else FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Invalid date format. Please enter a valid date, format = " + dateValidation.getDateFormat());
+                }
+            }
+            // jeigu kazkurie is fields netusti, tuomet kitoks hibernate
             for(User user : users){
                 UserTableParamaters userTableParamaters = new UserTableParamaters();
                 userTableParamaters.setId(user.getId());
@@ -219,7 +250,7 @@ public class MainForm implements Initializable {
                     userTableParamaters.setAddress(((Driver) user).getAddress());
                     userType = "Driver";
                 }
-
+                // apply type filter
                 if(applyFilter(userType))
                     data.add(userTableParamaters);
             }
@@ -248,6 +279,7 @@ public class MainForm implements Initializable {
         }
         return false;
     }
+
 
 
 

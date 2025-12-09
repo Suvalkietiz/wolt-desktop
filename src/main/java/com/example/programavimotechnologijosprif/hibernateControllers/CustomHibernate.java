@@ -20,6 +20,61 @@ public class CustomHibernate extends GenericHibernate {
         super(entityManagerFactory);
     }
 
+
+    public List<User> getUserBySimilarLogin(String login){
+        List<User> filteredUsers = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<User> cq = cb.createQuery(User.class);
+            Root<User> root = cq.from(User.class);
+
+            cq.select(root).where(cb.and(
+                    cb.like(root.get("login"), "%" + login + "%")
+            ));
+            Query q = entityManager.createQuery(cq);
+            filteredUsers = q.getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return filteredUsers;
+    }
+
+    public List<User> getUserBySimilarFullName(String fullName) {
+        // parse fullName
+        fullName = fullName.trim();
+        String[] splitFName = fullName.split(" ");
+        String name = splitFName[0];
+        String surname = splitFName[1];
+
+        List<User> filteredUsers = new ArrayList<>();
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<User> cq = cb.createQuery(User.class);
+            Root<User> root = cq.from(User.class);
+
+            cq.select(root).where(cb.and(
+                    cb.like(root.get("name"), "%" + name + "%"),
+                    cb.like(root.get("surname"), "%" + surname + "%")
+            ));
+            Query q = entityManager.createQuery(cq);
+            filteredUsers = q.getResultList();
+        }catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+        return filteredUsers;
+    }
+
+
     public User getUserByCrediantials(String login, String password) {
         User user = null;
         try{
@@ -257,9 +312,6 @@ public class CustomHibernate extends GenericHibernate {
     public List<Review> getDriverReviews(Driver driver) {
         return getUserReviews("driver", driver);
     }
-
-
-
 
 
 }

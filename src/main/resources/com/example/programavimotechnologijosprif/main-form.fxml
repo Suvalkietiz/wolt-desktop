@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane prefHeight="583.0" prefWidth="607.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.MainForm">
+<AnchorPane prefHeight="594.0" prefWidth="732.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.programavimotechnologijosprif.fxControllers.MainForm">
    <children>
       <StackPane layoutX="-7.0" layoutY="-8.0" prefHeight="400.0" prefWidth="607.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -23,18 +23,21 @@
               <tabs>
                 <Tab fx:id="userManagementTab" onSelectionChanged="#reloadTableData" text="User management">
                      <content>
-                      <AnchorPane fx:id="adminUserManagement" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <AnchorPane fx:id="adminUserManagement" minHeight="0.0" minWidth="0.0" prefHeight="554.0" prefWidth="741.0">
                            <children>
-                              <HBox alignment="CENTER_LEFT" layoutX="7.0" layoutY="9.0" prefHeight="42.0" prefWidth="586.0" spacing="20.0">
+                              <HBox alignment="CENTER_LEFT" layoutX="7.0" layoutY="9.0" prefHeight="42.0" prefWidth="717.0" spacing="17.0">
                                  <children>
                                     <Button mnemonicParsing="false" onAction="#openUserForm" text="Add user" />
                                     <Button mnemonicParsing="false" onAction="#openUserForm" text="Edit user" />
                                     <Button mnemonicParsing="false" onAction="#deleteUser" text="Delete user" />
-                                    <Line endX="-73.77940368652344" endY="9.893392562866211" startX="-73.77911376953125" startY="-9.399500846862793" />
-                                    <ComboBox fx:id="userTypeFilterBox" onAction="#selectedFilter" prefWidth="150.0" promptText="All" />
+                                    <ComboBox fx:id="userTypeFilterBox" onAction="#selectedFilter" prefHeight="26.0" prefWidth="83.0" promptText="All" />
+                                    <TextField fx:id="userFilterLoginField" prefHeight="26.0" prefWidth="78.0" promptText="Filter login" />
+                                    <TextField fx:id="userFilterFNameField" prefHeight="26.0" prefWidth="88.0" promptText="Filter F Name" />
+                                    <TextField fx:id="userFilterDateField" prefHeight="26.0" prefWidth="74.0" promptText="Filter date" />
+                                    <Button mnemonicParsing="false" onAction="#reloadTableData" text="Apply" />
                                  </children>
                               </HBox>
-                              <TableView fx:id="userTable" layoutX="1.0" layoutY="58.0" prefHeight="314.0" prefWidth="600.0">
+                              <TableView fx:id="userTable" layoutX="1.0" layoutY="58.0" prefHeight="314.0" prefWidth="719.0">
                                 <columns>
                                   <TableColumn fx:id="idColumn" prefWidth="75.0" text="ID" />
                                   <TableColumn fx:id="loginCol" prefWidth="75.0" text="Login" />
@@ -44,7 +47,7 @@
                                     <TableColumn fx:id="phoneCol" prefWidth="75.0" text="Phone" />
                                     <TableColumn fx:id="addressCol" prefWidth="75.0" text="Address" />
                                     <TableColumn fx:id="userTypeCol" prefWidth="75.0" text="User Type" />
-                                    <TableColumn fx:id="createdOnCol" prefWidth="75.0" text="Created on" />
+                                    <TableColumn fx:id="createdOnCol" prefWidth="106.0" text="Created on" />
                                 </columns>
                               </TableView>
                            </children>
