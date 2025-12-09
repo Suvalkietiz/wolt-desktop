@@ -20,6 +20,7 @@ public class AppUser extends User implements Serializable {
     //protected List<Review> myReviews;
     //protected List<Review> feedback;
     @Transient protected double rating;
+    private Integer points;
 
     public AppUser(String login, String password, String name, String surname, String phoneNumber, String address) {
         super(login, password, name, surname, phoneNumber);
