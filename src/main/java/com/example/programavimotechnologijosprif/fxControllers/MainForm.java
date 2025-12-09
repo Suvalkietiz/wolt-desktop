@@ -74,7 +74,6 @@ public class MainForm implements Initializable {
     @FXML public TextField selectFromField;
     @FXML public TextField selectToField;
     @FXML public Button statusUpdateButton;
-    @FXML public HBox statusUpdateHBox;
     //</editor-fold>
 
     @FXML public TabPane managementTabPane;
@@ -515,7 +514,6 @@ public class MainForm implements Initializable {
 
         selectStatusBox.getItems().clear();
         selectStatusBox.getItems().addAll(Status.values());
-        // ??
 
         userOrderList.getItems().clear();
         fillUserOrders();
@@ -625,10 +623,40 @@ public class MainForm implements Initializable {
             orderCompletedField.setText(selectedFoodOrder.getTimeCompleted().toString());
         orderItemsList.getItems().addAll(selectedFoodOrder.getItems());
         orderStatusField.setText(selectedFoodOrder.getStatus().toString());
+
+        if(selectedFoodOrder.getStatus().equals(Status.PENDING))
+            statusUpdateButton.setText("Approve order and start making");
+        else if(selectedFoodOrder.getStatus().equals(Status.PREPAIRING_FOOD))
+            statusUpdateButton.setText("Order is prepared");
+        else statusUpdateButton.setText("Update");
     }
 
     @FXML public void updateStatus(ActionEvent actionEvent) {
-        System.out.println("your status will be updated");
+        FoodOrder selectedFoodOrder = userOrderList.getSelectionModel().getSelectedItem();
+        if(selectedFoodOrder == null) {
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "You need to select a food order to update it's status");
+            return;
+        }
+        if(!selectedFoodOrder.getStatus().equals(Status.PENDING) && !selectedFoodOrder.getStatus().equals(Status.PREPAIRING_FOOD)){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "There is nothing to update");
+            return;
+        }
+        if(selectedFoodOrder.getStatus().equals(Status.PENDING)){
+            CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+            customHibernate.updateOrderStatus(selectedFoodOrder, Status.PREPAIRING_FOOD);
+            fillUserOrders();
+            deselectOrder();
+            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Success", "You accepted order ID " + selectedFoodOrder.getId() + ". Start making " + selectedFoodOrder.getItems());
+            System.out.println("new status is preparing");
+        }
+        if(selectedFoodOrder.getStatus().equals(Status.PREPAIRING_FOOD)){
+            System.out.println("new status is searching driver");
+            CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+            customHibernate.updateOrderStatus(selectedFoodOrder, Status.SEARCHING_DRIVER);
+            fillUserOrders();
+            deselectOrder();
+            FxUtils.generateAlert(Alert.AlertType.INFORMATION, "Success", "You completed order ID " + selectedFoodOrder.getId());
+        }
     }
 
 
@@ -682,4 +710,17 @@ public class MainForm implements Initializable {
         stage.show();
     }
 
+    @FXML public void deselectOrder() {
+        userOrderList.getSelectionModel().clearSelection();
+
+        orderStatusField.clear();
+        orderAppUserField.clear();
+        orderDriverField.clear();
+        orderRestaurantField.clear();
+        orderPriceField.clear();
+        orderCreatedOnField.clear();
+        orderCompletedField.clear();
+        orderItemsList.getItems().clear();
+        statusUpdateButton.setText("Update");
+    }
 }

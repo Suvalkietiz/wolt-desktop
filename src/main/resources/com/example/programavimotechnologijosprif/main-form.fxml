@@ -136,10 +136,10 @@
                                           <ListView fx:id="orderItemsList" prefHeight="94.0" prefWidth="227.0" />
                                        </children>
                                     </HBox>
-                                    <HBox fx:id="statusUpdateHBox" prefHeight="45.0" prefWidth="314.0">
+                                    <HBox prefHeight="45.0" prefWidth="314.0">
                                        <children>
                                           <Label prefHeight="17.0" prefWidth="89.0" text="Status Update" />
-                                          <Button fx:id="statusUpdateButton" mnemonicParsing="false" onAction="#updateStatus" text="Text" />
+                                          <Button fx:id="statusUpdateButton" mnemonicParsing="false" onAction="#updateStatus" text="Status" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -150,6 +150,7 @@
                               <TextField fx:id="selectFromField" layoutX="26.0" layoutY="109.0" promptText="- Select From -" />
                               <TextField fx:id="selectToField" layoutX="26.0" layoutY="148.0" promptText="- Select To -" />
                               <Button layoutX="26.0" layoutY="180.0" mnemonicParsing="false" onAction="#setUserOrders" text="Apply Date Filter" />
+                              <Button layoutX="265.0" layoutY="488.0" mnemonicParsing="false" onAction="#deselectOrder" text="Deselect" />
                            </children></AnchorPane>
                      </content>
                   </Tab>

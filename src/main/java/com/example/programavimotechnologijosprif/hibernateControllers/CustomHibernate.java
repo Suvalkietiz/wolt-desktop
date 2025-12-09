@@ -70,6 +70,28 @@ public class CustomHibernate extends GenericHibernate {
         return food;
     }
 
+    public void updateOrderStatus(FoodOrder foodOrder, Status newStatus){
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityManager.getTransaction().begin();
+            CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+            CriteriaQuery<FoodOrder> cq = cb.createQuery(FoodOrder.class);
+            Root<FoodOrder> root = cq.from(FoodOrder.class);
+            cq.select(root).where(cb.equal(root.get("id"), foodOrder.getId()));
+            FoodOrder foodOrderToUpdate = entityManager.createQuery(cq).getSingleResult();
+
+            foodOrderToUpdate.setStatus(newStatus);
+            entityManager.merge(foodOrderToUpdate);
+            entityManager.getTransaction().commit();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if(entityManager != null){
+                entityManager.close();
+            }
+        }
+    }
+
 
 
     private List<FoodOrder> getUserFoodOrders(String attributeNameInFoodOrders, Object userEntity) {
