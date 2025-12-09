@@ -81,4 +81,43 @@ public class FxUtils {
             return false;
         }
     }
+
+
+
+    public static boolean generateDataConfirmationAlert(Alert.AlertType alertType, String data){
+        Alert alert = new Alert(alertType);
+        alert.setTitle("Data Confirmation Alert");
+        alert.setHeaderText("Do you want to continue with this data?");
+        alert.setContentText("See details");
+
+        Label label = new Label("The data is as follows:");
+
+        TextArea textArea = new TextArea(data);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        GridPane expContent = new GridPane();
+        expContent.setMaxWidth(Double.MAX_VALUE);
+        expContent.add(label, 0, 0);
+        expContent.add(textArea, 0, 1);
+
+// Set expandable Exception into the dialog pane.
+        alert.getDialogPane().setExpandableContent(expContent);
+
+        ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType continueButton = new ButtonType("Continue");
+        alert.getButtonTypes().setAll(cancelButton, continueButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == continueButton){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

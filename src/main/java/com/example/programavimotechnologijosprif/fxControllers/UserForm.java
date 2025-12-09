@@ -1,6 +1,7 @@
 package com.example.programavimotechnologijosprif.fxControllers;
 
 import com.example.programavimotechnologijosprif.Utils.FxUtils;
+import com.example.programavimotechnologijosprif.hibernateControllers.CustomHibernate;
 import com.example.programavimotechnologijosprif.hibernateControllers.GenericHibernate;
 import com.example.programavimotechnologijosprif.model.*;
 import jakarta.persistence.EntityManagerFactory;
@@ -36,6 +37,8 @@ public class UserForm {
     @FXML public TextField drivingLicenseID;
     @FXML public Button updateUserButton;
     @FXML public Button createUserButton;
+    @FXML public TextField discountPercentageField;
+    @FXML public AnchorPane discountPane;
 
     private EntityManagerFactory entityManagerFactory;
     private GenericHibernate genericHibernate;
@@ -54,6 +57,8 @@ public class UserForm {
             System.out.println("Client is updating a user");
             createUserButton.setVisible(false);
             updateUserButton.setVisible(true);
+            discountPane.setVisible(false);
+
             loginField.setText(userForUpdate.getLogin());
             passwordField.setText(userForUpdate.getPassword());
             nameField.setText(userForUpdate.getName());
@@ -67,6 +72,7 @@ public class UserForm {
                 disableFields();
                 addressField.setText(((Restaurant) userForUpdate).getAddress());
                 workHoursField.setText(((Restaurant) userForUpdate).getWorkHours());
+                discountPane.setVisible(true);
             } else if(userForUpdate instanceof Driver) {
                 setUserRadio("Driver");
                 disableFields();
@@ -86,6 +92,7 @@ public class UserForm {
             System.out.println("Client is registing a user");
             createUserButton.setVisible(true);
             updateUserButton.setVisible(false);
+            discountPane.setVisible(false);
         }
 
     }
@@ -307,6 +314,55 @@ public class UserForm {
 
             if(countEmptyFields() != 0) generateEmptyInputAlert();
             else genericHibernate.updateEntity(appUser);
+        }
+    }
+
+    @FXML public void applyDiscount(ActionEvent actionEvent) {
+        double percentage = parseStringToDouble(discountPercentageField.getText());
+        if(percentage == Integer.MIN_VALUE){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Tai neskaicius", "Irasei neskaiciu;?");
+            return;
+        }
+        if(percentage<-1.0){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Kodel??", "Nori moketi uz tai kad uzisako maista?");
+            return;
+        }
+        if(percentage == 0.0){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Kodel??", "Pakelti kainas 0 procentu?XD");
+            return;
+        }
+        CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+        List<Food> foodList = customHibernate.getRestaurantFood((Restaurant) userForUpdate);
+        StringBuilder dataForConfirmation = new StringBuilder();
+        System.out.println("");
+        for(Food food : foodList){
+            double foodPrice = food.getPrice();
+            food.setPrice(foodPrice + (foodPrice*percentage));
+            System.out.println("food " + food.getName() + " new price " + food.getPrice());
+            dataForConfirmation
+                    .append("Food '")
+                    .append(food.getName())
+                    .append("' was calculated to ")
+                    .append(food.getPrice())
+                    .append("€\n");
+        }
+
+
+        if(FxUtils.generateDataConfirmationAlert(Alert.AlertType.INFORMATION, dataForConfirmation.toString())){
+            for(Food food: foodList)
+                genericHibernate.updateEntity(food);
+        } else System.out.println("Canceled");
+
+
+
+    }
+
+    private double parseStringToDouble(String str){
+        try{
+            return Double.parseDouble(str);
+        } catch(NumberFormatException ex){
+            ex.printStackTrace();
+            return Integer.MIN_VALUE;
         }
     }
 }
