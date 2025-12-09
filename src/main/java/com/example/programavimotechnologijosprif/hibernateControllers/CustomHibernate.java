@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.Root;
 import javafx.scene.control.Alert;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +82,9 @@ public class CustomHibernate extends GenericHibernate {
             FoodOrder foodOrderToUpdate = entityManager.createQuery(cq).getSingleResult();
 
             foodOrderToUpdate.setStatus(newStatus);
+            if(newStatus == Status.REJECTED)
+                foodOrderToUpdate.setTimeCompleted(LocalDateTime.now());
+
             entityManager.merge(foodOrderToUpdate);
             entityManager.getTransaction().commit();
         } catch (Exception e){

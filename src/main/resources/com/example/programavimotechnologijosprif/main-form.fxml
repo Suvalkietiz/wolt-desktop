@@ -151,6 +151,7 @@
                               <TextField fx:id="selectToField" layoutX="26.0" layoutY="148.0" promptText="- Select To -" />
                               <Button layoutX="26.0" layoutY="180.0" mnemonicParsing="false" onAction="#setUserOrders" text="Apply Date Filter" />
                               <Button layoutX="265.0" layoutY="488.0" mnemonicParsing="false" onAction="#deselectOrder" text="Deselect" />
+                              <Button layoutX="505.0" layoutY="487.0" mnemonicParsing="false" onAction="#rejectOrder" text="Reject Order" />
                            </children></AnchorPane>
                      </content>
                   </Tab>

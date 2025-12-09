@@ -619,7 +619,7 @@ public class MainForm implements Initializable {
         orderRestaurantField.setText(String.valueOf(selectedFoodOrder.getRestaurant()));
         orderPriceField.setText(String.valueOf(selectedFoodOrder.getPrice()));
         orderCreatedOnField.setText(selectedFoodOrder.getTimeCreated().toString());
-        if(selectedFoodOrder.getStatus().equals(Status.COMPLETED))
+        if(selectedFoodOrder.getStatus().equals(Status.COMPLETED) || selectedFoodOrder.getStatus().equals(Status.REJECTED))
             orderCompletedField.setText(selectedFoodOrder.getTimeCompleted().toString());
         orderItemsList.getItems().addAll(selectedFoodOrder.getItems());
         orderStatusField.setText(selectedFoodOrder.getStatus().toString());
@@ -722,5 +722,25 @@ public class MainForm implements Initializable {
         orderCompletedField.clear();
         orderItemsList.getItems().clear();
         statusUpdateButton.setText("Update");
+    }
+
+    public void rejectOrder() {
+        if(userOrderList.getSelectionModel().getSelectedItem() == null){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "You need to select a food order to reject it");
+            return;
+        }
+        FoodOrder selectedFoodOrder = userOrderList.getSelectionModel().getSelectedItem();
+        if(!selectedFoodOrder.getStatus().equals(Status.PENDING)){
+            FxUtils.generateAlert(Alert.AlertType.ERROR, "Error", "Food order has to be pending in order to reject it");
+            return;
+        }
+        boolean confirmation =
+                FxUtils.generateConfirmationAlert(Alert.AlertType.INFORMATION, "You sure baby?", "Are you sure you want to reject this order?");
+        if(confirmation) {
+            CustomHibernate customHibernate = new CustomHibernate(entityManagerFactory);
+            customHibernate.updateOrderStatus(selectedFoodOrder, Status.REJECTED);
+            fillUserOrders();
+            deselectOrder();
+        }
     }
 }
